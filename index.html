@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex, nofollow">
-    <title>ㄌㄌ 專業照護報告 V3.2</title>
+    <title>ㄌㄌ 專業照護報告 V3.3</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap" rel="stylesheet">
     <style>
@@ -29,7 +29,7 @@
         h1 { color: var(--primary); text-align: center; margin: 0; font-size: 19px; font-weight: 700; white-space: nowrap; }
         .subtitle { text-align: center; color: var(--soft-purple); font-size: 12px; margin-bottom: 25px; letter-spacing: 0.5px; }
 
-        .section { margin-bottom: 20px; padding: 18px; border-radius: 25px; background: var(--bg); border: 1px solid rgba(255,255,255,0.6); position: relative; overflow: hidden; }
+        .section { margin-bottom: 20px; padding: 18px; border-radius: 25px; background: var(--bg); border: 1px solid rgba(255,255,255,0.6); position: relative; }
         .section-title { font-weight: 700; color: var(--primary); margin-bottom: 15px; font-size: 16px; display: flex; align-items: center; }
         .section-title::before { content: ""; width: 4px; height: 16px; background: var(--primary); margin-right: 8px; border-radius: 2px; }
 
@@ -50,36 +50,43 @@
         .photo-box input { position: absolute; opacity: 0; width: 100%; height: 100%; cursor: pointer; z-index: 10; }
         .photo-box span { font-size: 11px; color: var(--soft-purple); text-align: center; }
 
-        /* --- 視覺武裝：守護者定位 (防變形強化) --- */
-        .guardian-wrapper { position: relative; width: 100%; }
+        /* --- 🔒 視覺武裝：守護者安全區定位 --- */
+        .guardian-container { position: relative; width: 100%; }
         .guardian-cat { 
             display: none; 
             position: absolute; 
             right: -10px; 
             bottom: -5px; 
-            width: 130px; 
-            height: auto !important; /* 強制高度自適應，防止壓扁 */
-            z-index: 10; 
+            width: 135px; /* 統一寬度 */
+            height: auto !important; /* 鎖死比例不變形 */
+            z-index: 5; 
             pointer-events: none;
         }
         .preview-mode .guardian-cat { display: block !important; }
 
-        /* --- 生成模式樣式 --- */
+        /* --- 生成模式高清強化 --- */
         .preview-mode #report-export-area { width: 1000px !important; max-width: 1000px !important; padding: 50px !important; }
         .preview-mode .grid-master { display: grid !important; grid-template-columns: 1fr 1fr !important; gap: 30px !important; }
         .preview-mode h1 { font-size: 36px !important; margin-bottom: 10px !important; }
         .preview-mode .subtitle { font-size: 16px !important; margin-bottom: 45px !important; }
         .preview-mode .section-title { font-size: 26px !important; margin-bottom: 22px !important; }
         .preview-mode .sub-label { font-size: 19px !important; margin: 25px 0 12px !important; }
+
+        /* 關鍵：文字護城河，確保文字不被貓咪擋住 */
         .preview-mode textarea { display: none !important; }
         .text-render { display: none; white-space: pre-wrap; font-size: 17px; line-height: 1.8; color: var(--text); padding: 5px 0; }
-        .preview-mode .text-render { display: block !important; padding-right: 110px; min-height: 80px; } /* 預留位置給貓咪 */
+        .preview-mode .text-render { 
+            display: block !important; 
+            padding-right: 140px; /* 預留貓咪的寬度 */
+            min-height: 100px; /* 確保即使字少，區域也有高度容納貓咪 */
+        }
+        
         .preview-mode .photo-box:not(:has(img[style*="display: block"])) { display: none !important; }
         .preview-mode .edit-only { display: none !important; }
 
-        /* --- 保姆名稱高清顯示區 --- */
-        #r-s { font-weight: 700; color: var(--soft-purple); font-size: 14px; margin-top: 5px; display: none; }
-        .preview-mode #r-s { display: block !important; font-size: 18px !important; margin-bottom: 10px; }
+        /* 高清保姆顯示 */
+        #r-s { font-weight: 700; color: var(--soft-purple); display: none; }
+        .preview-mode #r-s { display: block !important; font-size: 18px !important; margin-bottom: 8px; }
 
         #result-container { display: none; width: 100%; max-width: 1000px; margin-top: 30px; text-align: center; border-top: 3px solid var(--primary); padding-top: 25px; }
         #final-img { width: 100%; border-radius: 15px; box-shadow: 0 20px 60px rgba(0,0,0,0.2); border: 2px solid white; }
@@ -110,8 +117,7 @@
                         <option value="負責保姆：Tiffany">負責保姆：Tiffany</option>
                     </select>
                 </div>
-                <div id="r-s"></div>
-                <div id="v-t" style="font-size: 12px; color: var(--soft-purple); margin-top: 5px; border-top: 1px solid #eee; padding-top: 5px;"></div>
+                <div id="r-s"></div> <div id="v-t" style="font-size: 12px; color: var(--soft-purple); margin-top: 5px; border-top: 1px solid #eee; padding-top: 5px;"></div>
             </div>
 
             <div class="section">
@@ -126,10 +132,10 @@
                     <div class="photo-box"><span>側拍 4</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" onchange="pv(this)"></div>
                     <div class="photo-box"><span>側拍 5</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" onchange="pv(this)"></div>
                 </div>
-                <div class="guardian-wrapper">
+                <div class="guardian-container">
                     <textarea rows="2" placeholder="紀錄進食細節..." id="i-f"></textarea>
                     <div class="text-render" id="r-f"></div>
-                    <img src="cat_black.png" class="guardian-cat" alt="Black Cat">
+                    <img src="cat_black.png" class="guardian-cat" alt="Guardian">
                 </div>
 
                 <span class="sub-label">💧 飲水觀察</span>
@@ -141,10 +147,10 @@
                     <div class="photo-box"><span>側拍 4</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" onchange="pv(this)"></div>
                     <div class="photo-box"><span>側拍 5</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" onchange="pv(this)"></div>
                 </div>
-                <div class="guardian-wrapper">
+                <div class="guardian-container">
                     <textarea rows="2" placeholder="紀錄飲水觀察..." id="i-w"></textarea>
                     <div class="text-render" id="r-w"></div>
-                    <img src="cat_striped.png" class="guardian-cat" alt="Striped Cat">
+                    <img src="cat_striped.png" class="guardian-cat" alt="Guardian">
                 </div>
 
                 <span class="sub-label">💩 排泄觀察</span>
@@ -156,10 +162,10 @@
                     <div class="photo-box"><span>側拍 4</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" onchange="pv(this)"></div>
                     <div class="photo-box"><span>側拍 5</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" onchange="pv(this)"></div>
                 </div>
-                <div class="guardian-wrapper">
+                <div class="guardian-container">
                     <textarea rows="2" placeholder="紀錄便溺觀察..." id="i-p"></textarea>
                     <div class="text-render" id="r-p"></div>
-                    <img src="cat_orange.png" class="guardian-cat" alt="Orange Cat">
+                    <img src="cat_orange.png" class="guardian-cat" alt="Guardian">
                 </div>
             </div>
         </div>
@@ -182,7 +188,7 @@
 
             <div class="section" style="background: #FFF5EE;">
                 <div class="section-title" style="color: var(--accent);">💌 ㄌㄌ 想與你分享的悄悄話</div>
-                <div class="guardian-wrapper">
+                <div class="guardian-container">
                     <textarea rows="3" placeholder="溫馨提醒與專業建議..." id="i-t"></textarea>
                     <div class="text-render" id="r-t"></div>
                     <img src="cat_tortie.png" class="guardian-cat" alt="Tortie Cat" style="width: 110px;">
@@ -192,10 +198,12 @@
             <div class="section">
                 <div class="section-title">🛡️ 全景安全衛生驗收</div>
                 <div class="photo-grid">
-                    <div class="photo-box"><span>驗收 1</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" onchange="pv(this)"></div>
-                    <div class="photo-box"><span>驗收 2</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" onchange="pv(this)"></div>
-                    <div class="photo-box"><span>驗收 3</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" onchange="pv(this)"></div>
-                    <div class="photo-box"><span>驗收 4</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" onchange="pv(this)"></div>
+                    <div class="photo-grid" style="grid-template-columns: repeat(2, 1fr); width: 200%; gap: 8px;">
+                        <div class="photo-box"><span>驗收 1</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" onchange="pv(this)"></div>
+                        <div class="photo-box"><span>驗收 2</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" onchange="pv(this)"></div>
+                        <div class="photo-box"><span>驗收 3</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" onchange="pv(this)"></div>
+                        <div class="photo-box"><span>驗收 4</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" onchange="pv(this)"></div>
+                    </div>
                 </div>
                 <div class="tag-container edit-only">
                     <div class="tag-btn" onclick="this.classList.toggle('active')">清潔完成</div>
@@ -203,20 +211,20 @@
                     <div class="tag-btn" onclick="this.classList.toggle('active')">電器安全巡查</div>
                     <div class="tag-btn" onclick="this.classList.toggle('active')">門窗鎖閉確認</div>
                 </div>
-                <textarea rows="2" placeholder="環境小細節補充..." id="i-sa"></textarea>
+                <textarea rows="2" placeholder="環境細節補充..." id="i-sa"></textarea>
                 <div class="text-render" id="r-sa"></div>
             </div>
         </div>
     </div>
-    <p style="text-align:center; font-size:10px; color:var(--soft-purple); margin-top: 25px;">- Your Pets, My Priority -</p>
+    <p style="text-align:center; font-size:10px; color:var(--soft-purple); margin-top: 30px;">- Your Pets, My Priority -</p>
 </div>
 
 <div class="controls edit-only">
-    <button id="gen-btn" class="btn btn-main" onclick="generateReport()">🚀 生成 3 倍高清報告 (V3.2 守護者定位鎖死版)</button>
+    <button id="gen-btn" class="btn btn-main" onclick="generateReport()">🚀 生成 3 倍高清報告 (V3.3 護城河定案版)</button>
 </div>
 
 <div id="result-container">
-    <p style="color:var(--primary); font-weight:bold; font-size: 15px; margin-bottom: 10px;">✨ 報告已生成，保姆與貓咪位置已固定！ ✨</p>
+    <p style="color:var(--primary); font-weight:bold; font-size: 15px; margin-bottom: 10px;">✨ 報告已生成！文字護城河與保姆名已校正 ✨</p>
     <img id="final-img" src="">
     <button class="btn btn-reset" onclick="hideResult()">✎ 返回上方修改內容</button>
 </div>
@@ -235,12 +243,12 @@
 
     async function generateReport() {
         const btn = document.getElementById('gen-btn');
-        btn.innerText = '⚡ CSI 職人影像壓製中...';
+        btn.innerText = '⚡ CSI 影像比例校準中...';
         
         const now = new Date();
         document.getElementById('v-t').innerText = `報告日期：${now.toLocaleDateString()} ${now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`;
         
-        // 保姆名稱同步
+        // 保姆名同步
         document.getElementById('r-s').innerText = document.getElementById('i-s').value;
 
         document.querySelectorAll('textarea').forEach(ta => {
@@ -261,7 +269,7 @@
                     document.getElementById('final-img').src = url;
                     document.getElementById('result-container').style.display = 'block';
                     document.body.classList.remove('preview-mode');
-                    btn.innerText = '🚀 生成 3 倍高清報告 (V3.2 守護者定位鎖死版)';
+                    btn.innerText = '🚀 生成 3 倍高清報告 (V3.3 護城河定案版)';
                     document.getElementById('result-container').scrollIntoView({ behavior: 'smooth' });
                 }, 'image/png');
             });
