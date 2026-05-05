@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ㄌㄌ 專業照護報告 V2.6</title>
+    <meta name="robots" content="noindex, nofollow">
+    <title>ㄌㄌ 專業照護報告 V3.0</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap" rel="stylesheet">
     <style>
@@ -26,7 +27,7 @@
 
         .grid-master { display: flex; flex-direction: column; gap: 10px; }
 
-        /* 標題基礎樣式 */
+        /* 標題與表情符號 */
         h1 { color: var(--primary); text-align: center; margin: 0; font-size: 19px; font-weight: 700; white-space: nowrap; }
         .subtitle { text-align: center; color: var(--soft-purple); font-size: 12px; margin-bottom: 25px; letter-spacing: 0.5px; }
 
@@ -41,7 +42,7 @@
             background: white; margin-bottom: 8px; box-sizing: border-box; font-size: 14px; resize: none; font-family: inherit; line-height: 1.6;
         }
 
-        /* 3:4 相片框 */
+        /* 核心防變形框 3:4 */
         .photo-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-bottom: 8px; }
         .photo-box { 
             position: relative; width: 100%; aspect-ratio: 3 / 4; 
@@ -59,7 +60,6 @@
         .preview-mode #report-export-area { width: 1000px !important; max-width: 1000px !important; padding: 45px !important; }
         .preview-mode .grid-master { display: grid !important; grid-template-columns: 1fr 1fr !important; gap: 30px !important; }
         
-        /* 標題與標籤在高清圖中的字級調整 */
         .preview-mode h1 { font-size: 34px !important; margin-bottom: 10px !important; }
         .preview-mode .subtitle { font-size: 16px !important; margin-bottom: 40px !important; }
         .preview-mode .section-title { font-size: 24px !important; margin-bottom: 18px !important; }
@@ -73,11 +73,39 @@
         .preview-mode .tag-btn:not(.active) { display: none; }
         .preview-mode .edit-only { display: none !important; }
 
-        /* 下載與顯示結果 */
+        /* 🔒 視覺武裝：黏土貓咪 4 橫排樣式 (Preview-Only) */
+        .preview-only { display: none; }
+        .preview-mode .preview-only { display: block !important; }
+        
+        .clay-cat-decoration-container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr); /* 4 欄一橫排 */
+            gap: 20px;
+            margin-top: 30px; /* 報告結尾 */
+            width: 100%;
+            margin-bottom: 15px;
+        }
+        .clay-cat-photo-box {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 1 / 1; /* 正方形 */
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .clay-cat-photo-box img {
+            width: 100% !important;
+            height: 100% !important;
+            object-fit: contain !important; /* 確保去背貓咪不被裁切 */
+            display: block;
+        }
+
+        /* 下載與結果展示 */
         #result-container { display: none; width: 100%; max-width: 1000px; margin-top: 30px; text-align: center; border-top: 3px solid var(--primary); padding-top: 25px; }
         #final-img { width: 100%; height: auto !important; border-radius: 15px; box-shadow: 0 20px 60px rgba(0,0,0,0.2); border: 2px solid white; }
         
-        .controls { width: 100%; max-width: 500px; margin-top: 20px; padding-bottom: 50px; display: flex; flex-direction: column; gap: 10px; }
+        .controls { width: 100%; max-width: 500px; margin-top: 20px; padding-bottom: 80px; display: flex; flex-direction: column; gap: 10px; }
         .btn { border: none; padding: 18px; border-radius: 50px; font-weight: 700; cursor: pointer; font-size: 16px; }
         .btn-main { background: var(--primary); color: white; width: 100%; box-shadow: 0 5px 15px rgba(109,91,142,0.3); }
         .btn-reset { background: #888; color: white; margin-top: 10px; }
@@ -116,32 +144,48 @@
                 
                 <span class="sub-label">🍴 進食狀況</span>
                 <div class="photo-grid">
-                    <div class="photo-box"><span>點擊拍照</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" onchange="pv(this)"></div>
-                    <div class="photo-box"><span>點擊拍照</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" onchange="pv(this)"></div>
+                    <div class="photo-box"><span>📷 拍照</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" onchange="pv(this)"></div>
+                    <div class="photo-box"><span>側拍 1</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" onchange="pv(this)"></div>
+                    <div class="photo-box"><span>側拍 2</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" onchange="pv(this)"></div>
+                    <div class="photo-box"><span>側拍 3</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" onchange="pv(this)"></div>
+                    <div class="photo-box"><span>側拍 4</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" onchange="pv(this)"></div>
+                    <div class="photo-box"><span>側拍 5</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" onchange="pv(this)"></div>
                 </div>
                 <textarea rows="2" placeholder="紀錄進食細節..." id="i-f"></textarea>
                 <div class="text-render" id="r-f"></div>
 
                 <span class="sub-label">💧 飲水觀察</span>
                 <div class="photo-grid">
-                    <div class="photo-box"><span>點擊拍照</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" onchange="pv(this)"></div>
-                    <div class="photo-box"><span>點擊拍照</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" onchange="pv(this)"></div>
+                    <div class="photo-box"><span>📷 拍照</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" onchange="pv(this)"></div>
+                    <div class="photo-box"><span>側拍 1</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" onchange="pv(this)"></div>
+                    <div class="photo-box"><span>側拍 2</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" onchange="pv(this)"></div>
+                    <div class="photo-box"><span>側拍 3</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" onchange="pv(this)"></div>
+                    <div class="photo-box"><span>側拍 4</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" onchange="pv(this)"></div>
+                    <div class="photo-box"><span>側拍 5</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" onchange="pv(this)"></div>
                 </div>
                 <textarea rows="2" placeholder="紀錄飲水觀察..." id="i-w"></textarea>
                 <div class="text-render" id="r-w"></div>
 
                 <span class="sub-label">💩 排泄觀察</span>
                 <div class="photo-grid">
-                    <div class="photo-box"><span>點擊拍照</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" onchange="pv(this)"></div>
-                    <div class="photo-box"><span>點擊拍照</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" onchange="pv(this)"></div>
+                    <div class="photo-box"><span>📷 拍照</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" onchange="pv(this)"></div>
+                    <div class="photo-box"><span>側拍 1</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" onchange="pv(this)"></div>
+                    <div class="photo-box"><span>側拍 2</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" onchange="pv(this)"></div>
+                    <div class="photo-box"><span>側拍 3</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" onchange="pv(this)"></div>
+                    <div class="photo-box"><span>側拍 4</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" onchange="pv(this)"></div>
+                    <div class="photo-box"><span>側拍 5</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" onchange="pv(this)"></div>
                 </div>
                 <textarea rows="2" placeholder="紀錄便溺觀察..." id="i-p"></textarea>
                 <div class="text-render" id="r-p"></div>
 
                 <span class="sub-label">💊 醫囑 / 保養品執行</span>
                 <div class="photo-grid">
-                    <div class="photo-box"><span>點擊拍照</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" onchange="pv(this)"></div>
-                    <div class="photo-box"><span>點擊拍照</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" onchange="pv(this)"></div>
+                    <div class="photo-box"><span>📷 拍照</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" onchange="pv(this)"></div>
+                    <div class="photo-box"><span>側拍 1</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" onchange="pv(this)"></div>
+                    <div class="photo-box"><span>側拍 2</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" onchange="pv(this)"></div>
+                    <div class="photo-box"><span>側拍 3</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" onchange="pv(this)"></div>
+                    <div class="photo-box"><span>側拍 4</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" onchange="pv(this)"></div>
+                    <div class="photo-box"><span>側拍 5</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" onchange="pv(this)"></div>
                 </div>
                 <textarea rows="2" placeholder="紀錄執行狀況..." id="i-m"></textarea>
                 <div class="text-render" id="r-m"></div>
@@ -152,7 +196,7 @@
             <div class="section">
                 <div class="section-title">📸 今日互動小側拍💓</div>
                 <div class="photo-grid" style="grid-template-columns: 1fr;">
-                    <div class="photo-box" style="aspect-ratio: 4 / 3 !important;"><span>🌟 主打照片</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" onchange="pv(this)"></div>
+                    <div class="photo-box" style="aspect-ratio: 4 / 3 !important;"><span>🌟 今日主打照片</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" onchange="pv(this)"></div>
                 </div>
                 <div class="photo-grid" style="margin-top:8px;">
                     <div class="photo-box"><span>側拍 1</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" onchange="pv(this)"></div>
@@ -162,7 +206,7 @@
                     <div class="photo-box"><span>側拍 5</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" onchange="pv(this)"></div>
                     <div class="photo-box"><span>側拍 6</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" onchange="pv(this)"></div>
                 </div>
-                <textarea rows="3" style="margin-top:10px;" placeholder="描述今日的互動細節與觀察..." id="i-b"></textarea>
+                <textarea rows="3" style="margin-top:10px;" placeholder="描述今日細節..." id="i-b"></textarea>
                 <div class="text-render" id="r-b"></div>
             </div>
 
@@ -186,23 +230,32 @@
                     <div class="tag-btn" onclick="this.classList.toggle('active')">電器安全巡查</div>
                     <div class="tag-btn" onclick="this.classList.toggle('active')">門窗鎖閉確認</div>
                 </div>
-                <textarea rows="2" placeholder="環境細節補充..." id="i-sa"></textarea>
+                <textarea rows="2" placeholder="環境小細節補充..." id="i-sa"></textarea>
                 <div class="text-render" id="r-sa"></div>
             </div>
         </div>
     </div>
     
-    <svg class="clay-cat-icon" viewBox="0 0 100 100"><circle cx="50" cy="55" r="40" fill="#E0D7EA" /><circle cx="40" cy="50" r="4" fill="#6D5B8E" /><circle cx="60" cy="50" r="4" fill="#6D5B8E" /><path d="M45 65 Q50 70 55 65" fill="none" stroke="#6D5B8E" stroke-width="2" /></svg>
+    <div class="preview-only">
+        <div class="clay-cat-decoration-container">
+            <div class="clay-cat-photo-box"><img src="cat_black.png" alt="Black Clay Cat"></div>
+            <div class="clay-cat-photo-box"><img src="cat_striped.png" alt="Striped Clay Cat"></div>
+            <div class="clay-cat-photo-box"><img src="cat_orange.png" alt="Orange Clay Cat"></div>
+            <div class="clay-cat-photo-box"><img src="cat_tortie.png" alt="Tortie Clay Cat"></div>
+        </div>
+    </div>
+
+    <svg class="clay-cat-icon edit-only" viewBox="0 0 100 100"><circle cx="50" cy="55" r="40" fill="#E0D7EA" /><circle cx="40" cy="50" r="4" fill="#6D5B8E" /><circle cx="60" cy="50" r="4" fill="#6D5B8E" /><path d="M45 65 Q50 70 55 65" fill="none" stroke="#6D5B8E" stroke-width="2" /></svg>
     <p style="text-align:center; font-size:10px; color:var(--soft-purple); margin-bottom: 10px;">- Your Pets, My Priority -</p>
 </div>
 
 <div class="controls edit-only">
-    <button id="gen-btn" class="btn btn-main" onclick="generateReport()">🚀 生成 3 倍高清雙欄報告 (下圖長按儲存)</button>
+    <button id="gen-btn" class="btn btn-main" onclick="generateReport()">🚀 生成高清雙欄報告 (V3.0a 視覺武裝預備版)</button>
     <button class="btn btn-reset" onclick="if(confirm('確定要清空重新填寫嗎？')) location.reload()">↺ 全部重填</button>
 </div>
 
 <div id="result-container">
-    <p style="color:var(--primary); font-weight:bold; font-size: 15px; margin-bottom: 10px;">✨ 報告已生成，標題已強化！請長按下方圖片儲存 ✨</p>
+    <p style="color:var(--primary); font-weight:bold; font-size: 15px; margin-bottom: 10px;">✨ 報告已生成，標題、6格網格與4橫排黏土貓咪已就緒！請長按儲存 ✨</p>
     <img id="final-img" src="">
     <button class="btn btn-reset" onclick="hideResult()">✎ 返回上方修改內容</button>
 </div>
@@ -221,19 +274,18 @@
 
     async function generateReport() {
         const btn = document.getElementById('gen-btn');
-        btn.innerText = '⚡ 高清標題強化渲染中...';
+        btn.innerText = '⚡ CSI 生理網格與視覺武裝合成中...';
         
         const now = new Date();
         document.getElementById('v-t').innerText = `報告日期：${now.toLocaleDateString()} ${now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`;
         
-        // 文字同步
         document.querySelectorAll('textarea').forEach(ta => {
             const rid = ta.id.replace('i-', 'r-');
             const render = document.getElementById(rid);
             if(render) render.innerText = ta.value;
         });
 
-        // 進入高清渲染模式
+        // 進入生成模式：強制變寬至 1000px 以支援雙欄與裝飾
         document.body.classList.add('preview-mode');
 
         setTimeout(() => {
@@ -251,7 +303,7 @@
                     document.getElementById('final-img').src = url;
                     document.getElementById('result-container').style.display = 'block';
                     document.body.classList.remove('preview-mode');
-                    btn.innerText = '🚀 生成 3 倍高清雙欄報告 (下圖長按儲存)';
+                    btn.innerText = '🚀 生成高清雙欄報告 (V3.0a 視覺武裝預備版)';
                     document.getElementById('result-container').scrollIntoView({ behavior: 'smooth' });
                 }, 'image/png');
             });
