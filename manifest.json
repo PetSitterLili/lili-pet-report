@@ -1,0 +1,16 @@
+{
+  "name": "嘉義寵物保姆 ㄌㄌ ∥ 到府服務日誌",
+  "short_name": "ㄌㄌ照護日誌",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#F4F0F7",
+  "theme_color": "#6D5B8E",
+  "icons": [
+    {
+      "src": "denicon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
