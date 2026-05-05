@@ -19,6 +19,7 @@
 
         body { background-color: var(--bg); font-family: 'Noto Sans TC', sans-serif; color: var(--text); margin: 0; padding: 10px; display: flex; flex-direction: column; align-items: center; }
 
+        /* 編輯區域容器 */
         #report-export-area { 
             width: 100%; max-width: 500px; background: var(--clay); border-radius: 30px; 
             padding: 25px 15px; box-sizing: border-box; position: relative;
@@ -26,10 +27,11 @@
 
         .grid-master { display: flex; flex-direction: column; gap: 10px; }
 
+        /* 標題基礎樣式 */
         h1 { color: var(--primary); text-align: center; margin: 0; font-size: 19px; font-weight: 700; white-space: nowrap; }
         .subtitle { text-align: center; color: var(--soft-purple); font-size: 12px; margin-bottom: 25px; letter-spacing: 0.5px; }
 
-        .section { margin-bottom: 20px; padding: 18px; border-radius: 25px; background: var(--bg); border: 1px solid rgba(255,255,255,0.6); position: relative; }
+        .section { margin-bottom: 20px; padding: 18px; border-radius: 25px; background: var(--bg); border: 1px solid rgba(255,255,255,0.6); position: relative; overflow: hidden; }
         .section-title { font-weight: 700; color: var(--primary); margin-bottom: 15px; font-size: 16px; display: flex; align-items: center; }
         .section-title::before { content: ""; width: 4px; height: 16px; background: var(--primary); margin-right: 8px; border-radius: 2px; }
 
@@ -40,6 +42,7 @@
             background: white; margin-bottom: 8px; box-sizing: border-box; font-size: 14px; resize: none; font-family: inherit; line-height: 1.6;
         }
 
+        /* 核心防變形框 3:4 */
         .photo-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-bottom: 8px; }
         .photo-box { 
             position: relative; width: 100%; aspect-ratio: 3 / 4; 
@@ -50,53 +53,61 @@
         .photo-box input { position: absolute; opacity: 0; width: 100%; height: 100%; cursor: pointer; z-index: 10; }
         .photo-box span { font-size: 11px; color: var(--soft-purple); text-align: center; }
 
-        /* --- 🔒 視覺武裝：守護者安全區定位 --- */
-        .guardian-container { position: relative; width: 100%; }
+        /* --- 視覺武裝：守護者定位 (防變形鎖死) --- */
+        .guardian-wrapper { position: relative; width: 100%; }
         .guardian-cat { 
             display: none; 
             position: absolute; 
             right: -10px; 
             bottom: -5px; 
-            width: 135px; /* 統一寬度 */
-            height: auto !important; /* 鎖死比例不變形 */
-            z-index: 5; 
+            width: 130px; 
+            height: auto !important; /* 強制高度自適應，防止壓扁 */
+            z-index: 10; 
             pointer-events: none;
         }
         .preview-mode .guardian-cat { display: block !important; }
 
-        /* --- 生成模式高清強化 --- */
+        /* --- 全景確認標籤：編輯模式樣式 --- */
+        .tag-container { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0; }
+        .tag-btn { 
+            background: #fff; border: 1.5px solid var(--soft-purple); color: var(--soft-purple); 
+            padding: 8px 14px; border-radius: 20px; font-size: 13px; cursor: pointer; transition: 0.2s;
+        }
+        .tag-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+
+        /* --- 全景確認標籤：高清Preview模式 專用修正 (不躲起來) --- */
+        #r-sa-tags { display: none; margin-top: 10px; margin-bottom: 5px; } /* 預留給高清圖顯示的 div */
+        .preview-mode #r-sa-tags { display: flex !important; flex-wrap: wrap; gap: 8px; }
+        .preview-mode .active-tag-render { 
+            font-size: 16px; font-weight: 700; color: var(--primary); /* 高清圖呈現紫色粗體 */
+            margin-right: 15px;
+        }
+
+        /* --- 生成模式樣式強化 --- */
         .preview-mode #report-export-area { width: 1000px !important; max-width: 1000px !important; padding: 50px !important; }
         .preview-mode .grid-master { display: grid !important; grid-template-columns: 1fr 1fr !important; gap: 30px !important; }
         .preview-mode h1 { font-size: 36px !important; margin-bottom: 10px !important; }
         .preview-mode .subtitle { font-size: 16px !important; margin-bottom: 45px !important; }
         .preview-mode .section-title { font-size: 26px !important; margin-bottom: 22px !important; }
         .preview-mode .sub-label { font-size: 19px !important; margin: 25px 0 12px !important; }
-
-        /* 關鍵：文字護城河，確保文字不被貓咪擋住 */
         .preview-mode textarea { display: none !important; }
         .text-render { display: none; white-space: pre-wrap; font-size: 17px; line-height: 1.8; color: var(--text); padding: 5px 0; }
-        .preview-mode .text-render { 
-            display: block !important; 
-            padding-right: 140px; /* 預留貓咪的寬度 */
-            min-height: 100px; /* 確保即使字少，區域也有高度容納貓咪 */
-        }
-        
+        .preview-mode .text-render { display: block !important; padding-right: 110px; min-height: 80px; } /* 預留位置給貓咪 */
         .preview-mode .photo-box:not(:has(img[style*="display: block"])) { display: none !important; }
-        .preview-mode .edit-only { display: none !important; }
+        .preview-mode .edit-only { display: none !important; } /* 藏起下拉選單和編輯按鈕 */
 
-        /* 高清保姆顯示 */
-        #r-s { font-weight: 700; color: var(--soft-purple); display: none; }
-        .preview-mode #r-s { display: block !important; font-size: 18px !important; margin-bottom: 8px; }
+        /* --- 保姆名稱高清顯示區 --- */
+        #r-s { font-weight: 700; color: var(--soft-purple); font-size: 14px; margin-top: 5px; display: none; }
+        .preview-mode #r-s { display: block !important; font-size: 18px !important; margin-bottom: 10px; }
 
+        /* 下載與結果展示 */
         #result-container { display: none; width: 100%; max-width: 1000px; margin-top: 30px; text-align: center; border-top: 3px solid var(--primary); padding-top: 25px; }
-        #final-img { width: 100%; border-radius: 15px; box-shadow: 0 20px 60px rgba(0,0,0,0.2); border: 2px solid white; }
+        #final-img { width: 100%; height: auto !important; border-radius: 15px; box-shadow: 0 20px 60px rgba(0,0,0,0.2); border: 2px solid white; }
+        
         .controls { width: 100%; max-width: 500px; margin-top: 20px; padding-bottom: 80px; display: flex; flex-direction: column; gap: 10px; }
         .btn { border: none; padding: 18px; border-radius: 50px; font-weight: 700; cursor: pointer; font-size: 16px; }
-        .btn-main { background: var(--primary); color: white; width: 100%; }
-        .btn-reset { background: #888; color: white; }
-        .tag-container { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0; }
-        .tag-btn { background: #fff; border: 1.5px solid var(--soft-purple); color: var(--soft-purple); padding: 6px 12px; border-radius: 18px; font-size: 12px; }
-        .tag-btn.active { background: var(--primary); color: #fff; }
+        .btn-main { background: var(--primary); color: white; width: 100%; box-shadow: 0 5px 15px rgba(109,91,142,0.3); }
+        .btn-reset { background: #888; color: white; margin-top: 10px; }
     </style>
 </head>
 <body>
@@ -117,7 +128,8 @@
                         <option value="負責保姆：Tiffany">負責保姆：Tiffany</option>
                     </select>
                 </div>
-                <div id="r-s"></div> <div id="v-t" style="font-size: 12px; color: var(--soft-purple); margin-top: 5px; border-top: 1px solid #eee; padding-top: 5px;"></div>
+                <div id="r-s"></div>
+                <div id="v-t" style="font-size: 12px; color: var(--soft-purple); margin-top: 5px; border-top: 1px solid #eee; padding-top: 5px;"></div>
             </div>
 
             <div class="section">
@@ -132,7 +144,7 @@
                     <div class="photo-box"><span>側拍 4</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" onchange="pv(this)"></div>
                     <div class="photo-box"><span>側拍 5</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" onchange="pv(this)"></div>
                 </div>
-                <div class="guardian-container">
+                <div class="guardian-wrapper">
                     <textarea rows="2" placeholder="紀錄進食細節..." id="i-f"></textarea>
                     <div class="text-render" id="r-f"></div>
                     <img src="cat_black.png" class="guardian-cat" alt="Guardian">
@@ -147,7 +159,7 @@
                     <div class="photo-box"><span>側拍 4</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" onchange="pv(this)"></div>
                     <div class="photo-box"><span>側拍 5</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" onchange="pv(this)"></div>
                 </div>
-                <div class="guardian-container">
+                <div class="guardian-wrapper">
                     <textarea rows="2" placeholder="紀錄飲水觀察..." id="i-w"></textarea>
                     <div class="text-render" id="r-w"></div>
                     <img src="cat_striped.png" class="guardian-cat" alt="Guardian">
@@ -162,7 +174,7 @@
                     <div class="photo-box"><span>側拍 4</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" onchange="pv(this)"></div>
                     <div class="photo-box"><span>側拍 5</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" onchange="pv(this)"></div>
                 </div>
-                <div class="guardian-container">
+                <div class="guardian-wrapper">
                     <textarea rows="2" placeholder="紀錄便溺觀察..." id="i-p"></textarea>
                     <div class="text-render" id="r-p"></div>
                     <img src="cat_orange.png" class="guardian-cat" alt="Guardian">
@@ -173,7 +185,7 @@
         <div class="column">
             <div class="section">
                 <div class="section-title">📸 今日互動小側拍💓</div>
-                <div class="photo-grid" style="grid-template-columns: 1fr;"><div class="photo-box" style="aspect-ratio: 4 / 3 !important;"><span>🌟 主打照片</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" onchange="pv(this)"></div></div>
+                <div class="photo-grid" style="grid-template-columns: 1fr;"><div class="photo-box" style="aspect-ratio: 4 / 3 !important;"><span>🌟 今日主打照片</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" onchange="pv(this)"></div></div>
                 <div class="photo-grid" style="margin-top:8px;">
                     <div class="photo-box"><span>側拍 1</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" onchange="pv(this)"></div>
                     <div class="photo-box"><span>側拍 2</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" onchange="pv(this)"></div>
@@ -188,48 +200,54 @@
 
             <div class="section" style="background: #FFF5EE;">
                 <div class="section-title" style="color: var(--accent);">💌 ㄌㄌ 想與你分享的悄悄話</div>
-                <div class="guardian-container">
+                <div class="guardian-wrapper">
                     <textarea rows="3" placeholder="溫馨提醒與專業建議..." id="i-t"></textarea>
                     <div class="text-render" id="r-t"></div>
-                    <img src="cat_tortie.png" class="guardian-cat" alt="Tortie Cat" style="width: 110px;">
+                    <img src="cat_tortie.png" class="guardian-cat" alt="Guardian" style="width: 110px;">
                 </div>
             </div>
 
             <div class="section">
                 <div class="section-title">🛡️ 全景安全衛生驗收</div>
                 <div class="photo-grid">
-                    <div class="photo-grid" style="grid-template-columns: repeat(2, 1fr); width: 200%; gap: 8px;">
-                        <div class="photo-box"><span>驗收 1</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" onchange="pv(this)"></div>
-                        <div class="photo-box"><span>驗收 2</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" onchange="pv(this)"></div>
-                        <div class="photo-box"><span>驗收 3</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" onchange="pv(this)"></div>
-                        <div class="photo-box"><span>驗收 4</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" onchange="pv(this)"></div>
-                    </div>
+                    <div class="photo-box"><span>驗收 1</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" onchange="pv(this)"></div>
+                    <div class="photo-box"><span>驗收 2</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" onchange="pv(this)"></div>
+                    <div class="photo-box"><span>驗收 3</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" onchange="pv(this)"></div>
+                    <div class="photo-box"><span>驗收 4</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" onchange="pv(this)"></div>
                 </div>
+                
                 <div class="tag-container edit-only">
-                    <div class="tag-btn" onclick="this.classList.toggle('active')">✅清潔完成</div>
-                    <div class="tag-btn" onclick="this.classList.toggle('active')">✅零食玩具歸位</div>
+                    <div class="tag-btn" onclick="toggleTag(this)">✅清潔完成</div>
+                    <div class="tag-btn" onclick="toggleTag(this)">✅零食玩具歸位</div>
                     <div class="tag-btn" onclick="this.classList.toggle('active')">✅電器安全巡查</div>
                     <div class="tag-btn" onclick="this.classList.toggle('active')">✅門窗鎖閉確認</div>
                 </div>
+                <div id="r-sa-tags"></div>
+
                 <textarea rows="2" placeholder="環境細節補充..." id="i-sa"></textarea>
                 <div class="text-render" id="r-sa"></div>
             </div>
         </div>
     </div>
-    <p style="text-align:center; font-size:10px; color:var(--soft-purple); margin-top: 30px;">- Your Pets, My Priority -</p>
+    <p style="text-align:center; font-size:10px; color:var(--soft-purple); margin-top: 25px;">- Your Pets, My Priority -</p>
 </div>
 
 <div class="controls edit-only">
-    <button id="gen-btn" class="btn btn-main" onclick="generateReport()">🚀 生成 3 倍高清報告 (V3.3 護城河定案版)</button>
+    <button id="gen-btn" class="btn btn-main" onclick="generateReport()">🚀 生成 3 倍高清報告 (V3.3 綠色驗收版)</button>
 </div>
 
 <div id="result-container">
-    <p style="color:var(--primary); font-weight:bold; font-size: 15px; margin-bottom: 10px;">✨ 報告已生成！文字護城河與保姆名已校正 ✨</p>
+    <p style="color:var(--primary); font-weight:bold; font-size: 15px; margin-bottom: 10px;">✨ 報告已生成，保姆、貓咪與綠色勾勾已固定！ ✨</p>
     <img id="final-img" src="">
     <button class="btn btn-reset" onclick="hideResult()">✎ 返回上方修改內容</button>
 </div>
 
 <script>
+    // 修正：修正部分舊代碼中的 onclick 邏輯
+    function toggleTag(btn) {
+        btn.classList.toggle('active');
+    }
+
     function pv(input) {
         const box = input.parentElement;
         const img = box.querySelector('img');
@@ -243,13 +261,24 @@
 
     async function generateReport() {
         const btn = document.getElementById('gen-btn');
-        btn.innerText = '⚡ CSI 影像比例校準中...';
+        btn.innerText = '⚡ CSI 綠色勾勾壓製中...';
         
         const now = new Date();
         document.getElementById('v-t').innerText = `報告日期：${now.toLocaleDateString()} ${now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`;
         
-        // 保姆名同步
+        // 保姆名稱同步
         document.getElementById('r-s').innerText = document.getElementById('i-s').value;
+
+        // 【修正核心】標籤同步邏輯
+        const renderTagsArea = document.getElementById('r-sa-tags');
+        renderTagsArea.innerHTML = ''; // 清空舊的
+        const activeTags = document.querySelectorAll('.tag-btn.active');
+        activeTags.forEach(tag => {
+            const span = document.createElement('span');
+            span.className = 'active-tag-render';
+            span.innerText = tag.innerText; // 直接複製帶有✅的文字
+            renderTagsArea.appendChild(span);
+        });
 
         document.querySelectorAll('textarea').forEach(ta => {
             const rid = ta.id.replace('i-', 'r-');
@@ -269,7 +298,7 @@
                     document.getElementById('final-img').src = url;
                     document.getElementById('result-container').style.display = 'block';
                     document.body.classList.remove('preview-mode');
-                    btn.innerText = '🚀 生成 3 倍高清報告 (V3.3 護城河定案版)';
+                    btn.innerText = '🚀 生成 3 倍高清報告 (V3.3 綠色驗收版)';
                     document.getElementById('result-container').scrollIntoView({ behavior: 'smooth' });
                 }, 'image/png');
             });
