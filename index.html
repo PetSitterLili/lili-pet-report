@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex, nofollow">
-    <title>ㄌㄌ 專業照護報告 V3.3</title>
+    <title>ㄌㄌ 專業照護報告 V3.4</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap" rel="stylesheet">
     <style>
@@ -19,7 +19,6 @@
 
         body { background-color: var(--bg); font-family: 'Noto Sans TC', sans-serif; color: var(--text); margin: 0; padding: 10px; display: flex; flex-direction: column; align-items: center; }
 
-        /* 編輯區域容器 */
         #report-export-area { 
             width: 100%; max-width: 500px; background: var(--clay); border-radius: 30px; 
             padding: 25px 15px; box-sizing: border-box; position: relative;
@@ -27,7 +26,6 @@
 
         .grid-master { display: flex; flex-direction: column; gap: 10px; }
 
-        /* 標題基礎樣式 */
         h1 { color: var(--primary); text-align: center; margin: 0; font-size: 19px; font-weight: 700; white-space: nowrap; }
         .subtitle { text-align: center; color: var(--soft-purple); font-size: 12px; margin-bottom: 25px; letter-spacing: 0.5px; }
 
@@ -42,7 +40,6 @@
             background: white; margin-bottom: 8px; box-sizing: border-box; font-size: 14px; resize: none; font-family: inherit; line-height: 1.6;
         }
 
-        /* 核心防變形框 3:4 */
         .photo-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-bottom: 8px; }
         .photo-box { 
             position: relative; width: 100%; aspect-ratio: 3 / 4; 
@@ -56,18 +53,12 @@
         /* --- 視覺武裝：守護者定位 (防變形鎖死) --- */
         .guardian-wrapper { position: relative; width: 100%; }
         .guardian-cat { 
-            display: none; 
-            position: absolute; 
-            right: -10px; 
-            bottom: -5px; 
-            width: 130px; 
-            height: auto !important; /* 強制高度自適應，防止壓扁 */
-            z-index: 10; 
-            pointer-events: none;
+            display: none; position: absolute; right: -10px; bottom: -5px; 
+            width: 130px; height: auto !important; z-index: 10; pointer-events: none;
         }
         .preview-mode .guardian-cat { display: block !important; }
 
-        /* --- 全景確認標籤：編輯模式樣式 --- */
+        /* --- 全景確認標籤樣式 --- */
         .tag-container { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0; }
         .tag-btn { 
             background: #fff; border: 1.5px solid var(--soft-purple); color: var(--soft-purple); 
@@ -75,15 +66,11 @@
         }
         .tag-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); }
 
-        /* --- 全景確認標籤：高清Preview模式 專用修正 (不躲起來) --- */
-        #r-sa-tags { display: none; margin-top: 10px; margin-bottom: 5px; } /* 預留給高清圖顯示的 div */
+        #r-sa-tags { display: none; margin-top: 10px; margin-bottom: 5px; } 
         .preview-mode #r-sa-tags { display: flex !important; flex-wrap: wrap; gap: 8px; }
-        .preview-mode .active-tag-render { 
-            font-size: 16px; font-weight: 700; color: var(--primary); /* 高清圖呈現紫色粗體 */
-            margin-right: 15px;
-        }
+        .preview-mode .active-tag-render { font-size: 16px; font-weight: 700; color: var(--primary); margin-right: 15px; }
 
-        /* --- 生成模式樣式強化 --- */
+        /* --- 高清生成模式樣式 --- */
         .preview-mode #report-export-area { width: 1000px !important; max-width: 1000px !important; padding: 50px !important; }
         .preview-mode .grid-master { display: grid !important; grid-template-columns: 1fr 1fr !important; gap: 30px !important; }
         .preview-mode h1 { font-size: 36px !important; margin-bottom: 10px !important; }
@@ -92,18 +79,16 @@
         .preview-mode .sub-label { font-size: 19px !important; margin: 25px 0 12px !important; }
         .preview-mode textarea { display: none !important; }
         .text-render { display: none; white-space: pre-wrap; font-size: 17px; line-height: 1.8; color: var(--text); padding: 5px 0; }
-        .preview-mode .text-render { display: block !important; padding-right: 110px; min-height: 80px; } /* 預留位置給貓咪 */
+        .preview-mode .text-render { display: block !important; padding-right: 110px; min-height: 80px; } 
         .preview-mode .photo-box:not(:has(img[style*="display: block"])) { display: none !important; }
-        .preview-mode .edit-only { display: none !important; } /* 藏起下拉選單和編輯按鈕 */
+        .preview-mode .edit-only { display: none !important; } 
 
         /* --- 保姆名稱高清顯示區 --- */
         #r-s { font-weight: 700; color: var(--soft-purple); font-size: 14px; margin-top: 5px; display: none; }
         .preview-mode #r-s { display: block !important; font-size: 18px !important; margin-bottom: 10px; }
 
-        /* 下載與結果展示 */
         #result-container { display: none; width: 100%; max-width: 1000px; margin-top: 30px; text-align: center; border-top: 3px solid var(--primary); padding-top: 25px; }
         #final-img { width: 100%; height: auto !important; border-radius: 15px; box-shadow: 0 20px 60px rgba(0,0,0,0.2); border: 2px solid white; }
-        
         .controls { width: 100%; max-width: 500px; margin-top: 20px; padding-bottom: 80px; display: flex; flex-direction: column; gap: 10px; }
         .btn { border: none; padding: 18px; border-radius: 50px; font-weight: 700; cursor: pointer; font-size: 16px; }
         .btn-main { background: var(--primary); color: white; width: 100%; box-shadow: 0 5px 15px rgba(109,91,142,0.3); }
@@ -126,6 +111,7 @@
                     <select id="i-s">
                         <option value="負責保姆：ㄌㄌ">負責保姆：ㄌㄌ</option>
                         <option value="負責保姆：Tiffany">負責保姆：Tiffany</option>
+                        <option value="負責保姆：ㄌㄌ & Tiffany">負責保姆：ㄌㄌ & Tiffany</option>
                     </select>
                 </div>
                 <div id="r-s"></div>
@@ -217,8 +203,8 @@
                 </div>
                 
                 <div class="tag-container edit-only">
-                    <div class="tag-btn" onclick="toggleTag(this)">✅清潔完成</div>
-                    <div class="tag-btn" onclick="toggleTag(this)">✅零食玩具歸位</div>
+                    <div class="tag-btn" onclick="this.classList.toggle('active')">✅清潔完成</div>
+                    <div class="tag-btn" onclick="this.classList.toggle('active')">✅零食玩具歸位</div>
                     <div class="tag-btn" onclick="this.classList.toggle('active')">✅電器安全巡查</div>
                     <div class="tag-btn" onclick="this.classList.toggle('active')">✅門窗鎖閉確認</div>
                 </div>
@@ -233,21 +219,16 @@
 </div>
 
 <div class="controls edit-only">
-    <button id="gen-btn" class="btn btn-main" onclick="generateReport()">🚀 生成 3 倍高清報告 (V3.3 綠色驗收版)</button>
+    <button id="gen-btn" class="btn btn-main" onclick="generateReport()">🚀 生成 3 倍高清報告 (V3.4 職人終極版)</button>
 </div>
 
 <div id="result-container">
-    <p style="color:var(--primary); font-weight:bold; font-size: 15px; margin-bottom: 10px;">✨ 報告已生成，保姆、貓咪與綠色勾勾已固定！ ✨</p>
+    <p style="color:var(--primary); font-weight:bold; font-size: 15px; margin-bottom: 10px;">✨ 報告已生成，所有細節皆已到位！ ✨</p>
     <img id="final-img" src="">
     <button class="btn btn-reset" onclick="hideResult()">✎ 返回上方修改內容</button>
 </div>
 
 <script>
-    // 修正：修正部分舊代碼中的 onclick 邏輯
-    function toggleTag(btn) {
-        btn.classList.toggle('active');
-    }
-
     function pv(input) {
         const box = input.parentElement;
         const img = box.querySelector('img');
@@ -261,22 +242,22 @@
 
     async function generateReport() {
         const btn = document.getElementById('gen-btn');
-        btn.innerText = '⚡ CSI 綠色勾勾壓製中...';
+        btn.innerText = '⚡ CSI 終極影像壓製中...';
         
         const now = new Date();
         document.getElementById('v-t').innerText = `報告日期：${now.toLocaleDateString()} ${now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`;
         
-        // 保姆名稱同步
+        // 負責保姆同步
         document.getElementById('r-s').innerText = document.getElementById('i-s').value;
 
-        // 【修正核心】標籤同步邏輯
+        // 綠色勾勾標籤同步
         const renderTagsArea = document.getElementById('r-sa-tags');
-        renderTagsArea.innerHTML = ''; // 清空舊的
+        renderTagsArea.innerHTML = '';
         const activeTags = document.querySelectorAll('.tag-btn.active');
         activeTags.forEach(tag => {
             const span = document.createElement('span');
             span.className = 'active-tag-render';
-            span.innerText = tag.innerText; // 直接複製帶有✅的文字
+            span.innerText = tag.innerText;
             renderTagsArea.appendChild(span);
         });
 
@@ -298,7 +279,7 @@
                     document.getElementById('final-img').src = url;
                     document.getElementById('result-container').style.display = 'block';
                     document.body.classList.remove('preview-mode');
-                    btn.innerText = '🚀 生成 3 倍高清報告 (V3.3 綠色驗收版)';
+                    btn.innerText = '🚀 生成 3 倍高清報告 (V3.4 職人終極版)';
                     document.getElementById('result-container').scrollIntoView({ behavior: 'smooth' });
                 }, 'image/png');
             });
