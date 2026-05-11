@@ -4,12 +4,12 @@
     <link rel="manifest" href="manifest.json">
     <link rel="apple-touch-icon" href="denicon.png">
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="robots" content="noindex, nofollow">
-    <title>ㄌㄌ 專業照護報告 V3.6</title>
+    <title>ㄌㄌ 專業照護報告 V3.9 (暫存強化版)</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap" rel="stylesheet">
     <style>
@@ -93,7 +93,7 @@
         .controls { width: 100%; max-width: 500px; margin-top: 20px; padding-bottom: 80px; display: flex; flex-direction: column; gap: 10px; }
         .btn { border: none; padding: 18px; border-radius: 50px; font-weight: 700; cursor: pointer; font-size: 16px; }
         .btn-main { background: var(--primary); color: white; width: 100%; box-shadow: 0 5px 15px rgba(109,91,142,0.3); }
-        .btn-reset { background: #888; color: white; margin-top: 10px; }
+        .btn-reset { background: #888; color: white; margin-top: 15px; font-size: 14px; }
     </style>
 </head>
 <body>
@@ -106,10 +106,10 @@
         <div class="column">
             <div class="section">
                 <div class="section-title">📍 今日到誰家？</div>
-                <textarea rows="1" placeholder="填寫毛孩名稱" id="i-h"></textarea>
+                <textarea rows="1" placeholder="填寫毛孩名稱" id="i-h" oninput="as()"></textarea>
                 <div class="text-render" id="r-h"></div>
                 <div class="edit-only">
-                    <select id="i-s">
+                    <select id="i-s" onchange="as()">
                         <option value="負責保姆：ㄌㄌ">負責保姆：ㄌㄌ</option>
                         <option value="負責保姆：Tiffany">負責保姆：Tiffany</option>
                         <option value="負責保姆：ㄌㄌ & Tiffany">負責保姆：ㄌㄌ & Tiffany</option>
@@ -124,59 +124,59 @@
                 
                 <span class="sub-label">🍴 進食狀況</span>
                 <div class="photo-grid">
-                    <div class="photo-box"><span>📷 拍照</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" onchange="pv(this)"></div>
-                    <div class="photo-box"><span>側拍 1</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" onchange="pv(this)"></div>
-                    <div class="photo-box"><span>側拍 2</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" onchange="pv(this)"></div>
-                    <div class="photo-box"><span>側拍 3</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" onchange="pv(this)"></div>
-                    <div class="photo-box"><span>側拍 4</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" onchange="pv(this)"></div>
-                    <div class="photo-box"><span>側拍 5</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" onchange="pv(this)"></div>
+                    <div class="photo-box"><span>📷 拍照</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" data-id="p1" onchange="pv(this)"></div>
+                    <div class="photo-box"><span>側拍 1</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" data-id="p2" onchange="pv(this)"></div>
+                    <div class="photo-box"><span>側拍 2</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" data-id="p3" onchange="pv(this)"></div>
+                    <div class="photo-box"><span>側拍 3</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" data-id="p4" onchange="pv(this)"></div>
+                    <div class="photo-box"><span>側拍 4</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" data-id="p5" onchange="pv(this)"></div>
+                    <div class="photo-box"><span>側拍 5</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" data-id="p6" onchange="pv(this)"></div>
                 </div>
                 <div class="guardian-wrapper">
-                    <textarea rows="2" placeholder="紀錄進食細節..." id="i-f"></textarea>
+                    <textarea rows="2" placeholder="紀錄進食細節..." id="i-f" oninput="as()"></textarea>
                     <div class="text-render" id="r-f"></div>
                     <img src="cat_black.png" class="guardian-cat" alt="Black Cat">
                 </div>
 
                 <span class="sub-label">💧 飲水觀察</span>
                 <div class="photo-grid">
-                    <div class="photo-box"><span>📷 拍照</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" onchange="pv(this)"></div>
-                    <div class="photo-box"><span>側拍 1</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" onchange="pv(this)"></div>
-                    <div class="photo-box"><span>側拍 2</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" onchange="pv(this)"></div>
-                    <div class="photo-box"><span>側拍 3</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" onchange="pv(this)"></div>
-                    <div class="photo-box"><span>側拍 4</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" onchange="pv(this)"></div>
-                    <div class="photo-box"><span>側拍 5</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" onchange="pv(this)"></div>
+                    <div class="photo-box"><span>📷 拍照</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" data-id="p7" onchange="pv(this)"></div>
+                    <div class="photo-box"><span>側拍 1</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" data-id="p8" onchange="pv(this)"></div>
+                    <div class="photo-box"><span>側拍 2</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" data-id="p9" onchange="pv(this)"></div>
+                    <div class="photo-box"><span>側拍 3</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" data-id="p10" onchange="pv(this)"></div>
+                    <div class="photo-box"><span>側拍 4</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" data-id="p11" onchange="pv(this)"></div>
+                    <div class="photo-box"><span>側拍 5</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" data-id="p12" onchange="pv(this)"></div>
                 </div>
                 <div class="guardian-wrapper">
-                    <textarea rows="2" placeholder="紀錄飲水觀察..." id="i-w"></textarea>
+                    <textarea rows="2" placeholder="紀錄飲水觀察..." id="i-w" oninput="as()"></textarea>
                     <div class="text-render" id="r-w"></div>
                     <img src="cat_striped.png" class="guardian-cat" alt="Striped Cat">
                 </div>
 
                 <span class="sub-label">💩 排泄觀察</span>
                 <div class="photo-grid">
-                    <div class="photo-box"><span>📷 拍照</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" onchange="pv(this)"></div>
-                    <div class="photo-box"><span>側拍 1</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" onchange="pv(this)"></div>
-                    <div class="photo-box"><span>側拍 2</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" onchange="pv(this)"></div>
-                    <div class="photo-box"><span>側拍 3</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" onchange="pv(this)"></div>
-                    <div class="photo-box"><span>側拍 4</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" onchange="pv(this)"></div>
-                    <div class="photo-box"><span>側拍 5</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" onchange="pv(this)"></div>
+                    <div class="photo-box"><span>📷 拍照</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" data-id="p13" onchange="pv(this)"></div>
+                    <div class="photo-box"><span>側拍 1</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" data-id="p14" onchange="pv(this)"></div>
+                    <div class="photo-box"><span>側拍 2</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" data-id="p15" onchange="pv(this)"></div>
+                    <div class="photo-box"><span>側拍 3</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" data-id="p16" onchange="pv(this)"></div>
+                    <div class="photo-box"><span>側拍 4</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" data-id="p17" onchange="pv(this)"></div>
+                    <div class="photo-box"><span>側拍 5</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" data-id="p18" onchange="pv(this)"></div>
                 </div>
                 <div class="guardian-wrapper">
-                    <textarea rows="2" placeholder="紀錄便溺觀察..." id="i-p"></textarea>
+                    <textarea rows="2" placeholder="紀錄便溺觀察..." id="i-p" oninput="as()"></textarea>
                     <div class="text-render" id="r-p"></div>
                     <img src="cat_orange.png" class="guardian-cat" alt="Orange Cat">
                 </div>
 
                 <span class="sub-label">💊 醫囑 / 保養品執行</span>
                 <div class="photo-grid">
-                    <div class="photo-box"><span>📷 拍照</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" onchange="pv(this)"></div>
-                    <div class="photo-box"><span>側拍 1</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" onchange="pv(this)"></div>
+                    <div class="photo-box"><span>📷 拍照</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" data-id="p19" onchange="pv(this)"></div>
+                    <div class="photo-box"><span>側拍 1</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" data-id="p20" onchange="pv(this)"></div>
                     <div class="photo-box"><span>側拍 2</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" onchange="pv(this)"></div>
                     <div class="photo-box"><span>側拍 3</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" onchange="pv(this)"></div>
                     <div class="photo-box"><span>側拍 4</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" onchange="pv(this)"></div>
                     <div class="photo-box"><span>側拍 5</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" onchange="pv(this)"></div>
                 </div>
-                <textarea rows="2" placeholder="紀錄醫囑執行狀況..." id="i-m"></textarea>
+                <textarea rows="2" placeholder="紀錄醫囑執行狀況..." id="i-m" oninput="as()"></textarea>
                 <div class="text-render" id="r-m"></div>
             </div>
         </div>
@@ -184,23 +184,23 @@
         <div class="column">
             <div class="section">
                 <div class="section-title">📸 今日互動小側拍💓</div>
-                <div class="photo-grid" style="grid-template-columns: 1fr;"><div class="photo-box" style="aspect-ratio: 4 / 3 !important;"><span>🌟 今日主打照片</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" onchange="pv(this)"></div></div>
+                <div class="photo-grid" style="grid-template-columns: 1fr;"><div class="photo-box" style="aspect-ratio: 4 / 3 !important;"><span>🌟 今日主打照片</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" data-id="p21" onchange="pv(this)"></div></div>
                 <div class="photo-grid" style="margin-top:8px;">
-                    <div class="photo-box"><span>側拍 1</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" onchange="pv(this)"></div>
-                    <div class="photo-box"><span>側拍 2</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" onchange="pv(this)"></div>
-                    <div class="photo-box"><span>側拍 3</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" onchange="pv(this)"></div>
-                    <div class="photo-box"><span>側拍 4</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" onchange="pv(this)"></div>
-                    <div class="photo-box"><span>側拍 5</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" onchange="pv(this)"></div>
-                    <div class="photo-box"><span>側拍 6</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" onchange="pv(this)"></div>
+                    <div class="photo-box"><span>側拍 1</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" data-id="p22" onchange="pv(this)"></div>
+                    <div class="photo-box"><span>側拍 2</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" data-id="p23" onchange="pv(this)"></div>
+                    <div class="photo-box"><span>側拍 3</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" data-id="p24" onchange="pv(this)"></div>
+                    <div class="photo-box"><span>側拍 4</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" data-id="p25" onchange="pv(this)"></div>
+                    <div class="photo-box"><span>側拍 5</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" data-id="p26" onchange="pv(this)"></div>
+                    <div class="photo-box"><span>側拍 6</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" data-id="p27" onchange="pv(this)"></div>
                 </div>
-                <textarea rows="3" style="margin-top:10px;" placeholder="描述今日細節..." id="i-b"></textarea>
+                <textarea rows="3" style="margin-top:10px;" placeholder="描述今日細節..." id="i-b" oninput="as()"></textarea>
                 <div class="text-render" id="r-b"></div>
             </div>
 
             <div class="section" style="background: #FFF5EE;">
                 <div class="section-title" style="color: var(--accent);">💌 ㄌㄌ 想與你分享的悄悄話</div>
                 <div class="guardian-wrapper">
-                    <textarea rows="3" placeholder="溫馨提醒與專業建議..." id="i-t"></textarea>
+                    <textarea rows="3" placeholder="溫馨提醒與專業建議..." id="i-t" oninput="as()"></textarea>
                     <div class="text-render" id="r-t"></div>
                     <img src="cat_tortie.png" class="guardian-cat" alt="Tortie Cat" style="width: 110px;">
                 </div>
@@ -209,19 +209,19 @@
             <div class="section">
                 <div class="section-title">🛡️ 全景安全衛生驗收</div>
                 <div class="photo-grid">
-                    <div class="photo-box"><span>驗收 1</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" onchange="pv(this)"></div>
-                    <div class="photo-box"><span>驗收 2</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" onchange="pv(this)"></div>
-                    <div class="photo-box"><span>驗收 3</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" onchange="pv(this)"></div>
-                    <div class="photo-box"><span>驗收 4</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" onchange="pv(this)"></div>
+                    <div class="photo-box"><span>驗收 1</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" data-id="p28" onchange="pv(this)"></div>
+                    <div class="photo-box"><span>驗收 2</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" data-id="p29" onchange="pv(this)"></div>
+                    <div class="photo-box"><span>驗收 3</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" data-id="p30" onchange="pv(this)"></div>
+                    <div class="photo-box"><span>驗收 4</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" data-id="p31" onchange="pv(this)"></div>
                 </div>
                 <div class="tag-container edit-only">
-                    <div class="tag-btn" onclick="this.classList.toggle('active')">✅清潔完成</div>
-                    <div class="tag-btn" onclick="this.classList.toggle('active')">✅零食玩具歸位</div>
-                    <div class="tag-btn" onclick="this.classList.toggle('active')">✅電器安全巡查</div>
-                    <div class="tag-btn" onclick="this.classList.toggle('active')">✅門窗鎖閉確認</div>
+                    <div class="tag-btn" onclick="tg(this)">✅清潔完成</div>
+                    <div class="tag-btn" onclick="tg(this)">✅零食玩具歸位</div>
+                    <div class="tag-btn" onclick="tg(this)">✅電器安全巡查</div>
+                    <div class="tag-btn" onclick="tg(this)">✅門窗鎖閉確認</div>
                 </div>
                 <div id="r-sa-tags"></div>
-                <textarea rows="2" placeholder="環境細節補充..." id="i-sa"></textarea>
+                <textarea rows="2" placeholder="環境細節補充..." id="i-sa" oninput="as()"></textarea>
                 <div class="text-render" id="r-sa"></div>
             </div>
         </div>
@@ -230,23 +230,104 @@
 </div>
 
 <div class="controls edit-only">
-    <button id="gen-btn" class="btn btn-main" onclick="generateReport()">🚀 生成 3 倍高清報告 (V3.6 終極完全體)</button>
+    <button id="gen-btn" class="btn btn-main" onclick="generateReport()">🚀 生成 3 倍高清報告 (V3.9 職人暫存完全體)</button>
+    <button class="btn btn-reset" onclick="rs()">↺ 下一戶：徹底抹除所有暫存</button>
 </div>
 
 <div id="result-container">
-    <p style="color:var(--primary); font-weight:bold; font-size: 15px; margin-bottom: 10px;">✨ 報告已生成，八大區塊全數歸位！ ✨</p>
+    <p style="color:var(--primary); font-weight:bold; font-size: 15px; margin-bottom: 10px;">✨ 報告已生成，所有暫存已同步！ ✨</p>
     <img id="final-img" src="">
     <button class="btn btn-reset" onclick="hideResult()">✎ 返回上方修改內容</button>
 </div>
 
 <script>
+    // --- 🛡️ IndexedDB 核心影像引擎 (僅針對 V3.9 新增) ---
+    const dbName = "LiliPetVault";
+    let db;
+    const request = indexedDB.open(dbName, 1);
+    request.onupgradeneeded = e => e.target.result.createObjectStore("photos");
+    request.onsuccess = e => { db = e.target.result; loadAll(); };
+
+    function savePhotoDB(id, base64) {
+        const tx = db.transaction("photos", "readwrite");
+        tx.objectStore("photos").put(base64, id);
+    }
+
+    function loadAll() {
+        // 載入文字與標籤 (來自 localStorage)
+        const fields = ['i-h', 'i-f', 'i-w', 'i-p', 'i-m', 'i-b', 'i-t', 'i-sa', 'i-s'];
+        fields.forEach(id => {
+            const val = localStorage.getItem(id);
+            if (val) document.getElementById(id).value = val;
+        });
+        const tags = JSON.parse(localStorage.getItem('tags') || '[]');
+        document.querySelectorAll('.tag-btn').forEach(btn => {
+            if (tags.includes(btn.innerText)) btn.classList.add('active');
+        });
+
+        // 載入照片 (來自 IndexedDB)
+        const tx = db.transaction("photos", "readonly");
+        const store = tx.objectStore("photos");
+        document.querySelectorAll('input[type="file"]').forEach(input => {
+            const pid = input.getAttribute('data-id');
+            if(pid) {
+                store.get(pid).onsuccess = e => {
+                    if (e.target.result) {
+                        const img = input.parentElement.querySelector('img');
+                        const span = input.parentElement.querySelector('span');
+                        img.src = e.target.result; img.style.display = 'block'; span.style.display = 'none';
+                    }
+                };
+            }
+        });
+    }
+
+    // 文字自動暫存
+    function as() {
+        const fields = ['i-h', 'i-f', 'i-w', 'i-p', 'i-m', 'i-b', 'i-t', 'i-sa', 'i-s'];
+        fields.forEach(id => {
+            localStorage.setItem(id, document.getElementById(id).value);
+        });
+    }
+
+    // 標籤切換與暫存
+    function tg(btn) {
+        btn.classList.toggle('active');
+        const activeTags = Array.from(document.querySelectorAll('.tag-btn.active')).map(b => b.innerText);
+        localStorage.setItem('tags', JSON.stringify(activeTags));
+    }
+
+    // 徹底清空暫存 (下一戶使用)
+    function rs() {
+        if (confirm('【職人提醒】確定要抹除目前所有「文字與照片暫存」，開始新的一戶紀錄嗎？')) {
+            localStorage.clear();
+            const tx = db.transaction("photos", "readwrite");
+            tx.objectStore("photos").clear().onsuccess = () => location.reload();
+        }
+    }
+
+    // 刷新防呆
+    window.addEventListener('beforeunload', e => {
+        const check = document.getElementById('i-h').value || document.getElementById('i-f').value;
+        if (check) { e.preventDefault(); e.returnValue = ''; }
+    });
+
+    // ----------------------------------------------------
+    // 以下維持 V3.6 原本邏輯，僅在影像預覽加入 savePhotoDB
+    // ----------------------------------------------------
+
     function pv(input) {
         const box = input.parentElement;
         const img = box.querySelector('img');
         const span = box.querySelector('span');
+        const pid = input.getAttribute('data-id');
         if (input.files[0]) {
             const reader = new FileReader();
-            reader.onload = (e) => { img.src = e.target.result; img.style.display = 'block'; span.style.display = 'none'; };
+            reader.onload = (e) => {
+                const base64 = e.target.result;
+                img.src = base64; img.style.display = 'block'; span.style.display = 'none';
+                if(pid) savePhotoDB(pid, base64); // 拍照瞬間存入保險箱
+            };
             reader.readAsDataURL(input.files[0]);
         }
     }
@@ -282,7 +363,7 @@
                     document.getElementById('final-img').src = url;
                     document.getElementById('result-container').style.display = 'block';
                     document.body.classList.remove('preview-mode');
-                    btn.innerText = '🚀 生成 3 倍高清報告 (V3.6 終極完全體)';
+                    btn.innerText = '🚀 生成 3 倍高清報告 (V3.9 職人暫存完全體)';
                     document.getElementById('result-container').scrollIntoView({ behavior: 'smooth' });
                 }, 'image/png');
             });
