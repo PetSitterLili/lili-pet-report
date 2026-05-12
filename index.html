@@ -162,6 +162,7 @@
         </div>
         <center><button class="tag-btn" style="background:#999; color:white; padding:10px 20px;" onclick="rs()">↺ 下一戶：徹底抹除暫存</button></center>
     </div>
+
     <div id="render-stage">
         <div class="export-page" id="page-1">
             <div class="header-final"><h1>嘉義寵物保姆 ㄌㄌ ∥ 到府服務日誌</h1><div class="chapter-tag">Chapter 01. Nutrition & Hydration</div></div>
@@ -184,7 +185,7 @@
         <div class="export-page" id="page-3">
             <div class="header-final"><h1>嘉義寵物保姆 ㄌㄌ ∥ 到府服務日誌</h1><div class="chapter-tag">Chapter 03. Interaction & Safety</div></div>
             <div class="info-bar-final"><span class="h-sync"></span><span class="h-date"></span></div>
-            <div id="stg-p25" class="photo-box-final ratio-43" style="width:100%; margin-bottom:20px;"></div>
+            <div id="stg-p25-wrap" style="width:100%; margin-bottom:20px;"></div>
             <div class="report-grid-2col">
                 <div class="col-section"><div class="report-title-final">📸 暖心互動紀錄</div><div class="photo-grid-final" id="stg-p26"></div><div class="text-content-final" id="stg-b"></div></div>
                 <div class="col-section">
@@ -202,6 +203,7 @@
             <div class="footer-final"><div class="slogan-final">「生活雖然匆忙，但我會一直在這，陪孩子享受愜意的日常。」</div><div class="ig-area-final">歡迎追蹤ㄌㄌ，因為你家小寶貝可能會上鏡頭喔！<br><img src="ig.png"></div></div>
         </div>
     </div>
+
 <script>
     const dbName = "LiliVault_V7_0";
     let db, pageBlobs = {};
@@ -218,6 +220,7 @@
         const store = db.transaction("photos", "readonly").objectStore("photos");
         document.querySelectorAll('.photo-box-edit input').forEach(i => {
             const pid = i.getAttribute('data-id');
+            // 修復處：確保能從 onchange 抓到正確的 stgId，包含 p25
             const stgId = i.getAttribute('onchange').match(/'([^']+)'/)[1];
             store.get(pid).onsuccess = e => { if (e.target.result) updateMirror(stgId, pid, e.target.result, i); };
         });
@@ -243,18 +246,28 @@
     }
     function tg(b) { b.classList.toggle('active'); localStorage.setItem('tags', JSON.stringify(Array.from(document.querySelectorAll('.tag-btn.active')).map(x => x.innerText))); syncText(); }
     function pv(i, stgId) { if (i.files[0]) { const r = new FileReader(); r.onload = e => updateMirror(stgId, i.getAttribute('data-id'), e.target.result, i); r.readAsDataURL(i.files[0]); } }
+    
     function updateMirror(stgId, pid, b64, inputEl) {
         const box = inputEl.parentElement;
         const img = box.querySelector('img');
         img.src = b64; img.style.display = 'block';
         box.querySelector('span').style.display = 'none';
         savePhotoDB(pid, b64);
-        const stage = document.getElementById(stgId);
-        if (pid === 'p25') { stage.innerHTML = `<img src="${b64}" style="width:100%; height:100%; object-fit:cover; border-radius:20px;">`; stage.style.display = 'block'; return; }
+        
+        // 修復處：針對 p25 主打星的輸出邏輯，確保它能產生正確的 div 並顯示
+        const stage = document.getElementById(stgId === 'stg-p25' ? 'stg-p25-wrap' : stgId);
         let target = stage.querySelector(`[data-stg="${pid}"]`);
-        if (!target) { target = document.createElement('div'); target.className = (stgId === 'stg-p32') ? "photo-box-final ratio-43" : "photo-box-final"; target.setAttribute('data-stg', pid); stage.appendChild(target); }
-        target.style.display = 'block'; target.innerHTML = `<img src="${b64}">`;
+        if (!target) { 
+            target = document.createElement('div'); 
+            target.className = (stgId === 'stg-p32' || stgId === 'stg-p25') ? "photo-box-final ratio-43" : "photo-box-final"; 
+            if (stgId === 'stg-p25') target.style.width = "100%"; // 主打星全寬
+            target.setAttribute('data-stg', pid); 
+            stage.appendChild(target); 
+        }
+        target.style.display = 'block'; 
+        target.innerHTML = `<img src="${b64}">`;
     }
+
     function rs() { if (confirm('抹除所有暫存？')) { localStorage.clear(); db.transaction("photos", "readwrite").objectStore("photos").clear().onsuccess = () => location.reload(); } }
     async function generate(num) {
         const btn = document.getElementById(`gen-${num}`);
@@ -268,11 +281,8 @@
                 canvas.toBlob(blob => {
                     const petName = document.getElementById('i-h').value || "未命名";
                     const pgNames = ["01飲食管理", "02生理監控", "03互動與驗收"];
-                    // 產生時間戳記 (格式：20260513_1240)
                     const n = new Date();
                     const ts = `${n.getFullYear()}${String(n.getMonth()+1).padStart(2,'0')}${String(n.getDate()).padStart(2,'0')}_${String(n.getHours()).padStart(2,'0')}${String(n.getMinutes()).padStart(2,'0')}`;
-
-                    // 在檔名尾部加上時間戳記
                     pageBlobs[num] = { blob, name: `[ㄌㄌ照護]_${petName}_${pgNames[num-1]}_${ts}.jpg` };
                     btn.innerText = "✅ 成功";
                     dlBtn.classList.add('active');
