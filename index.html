@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <link rel="manifest" href="manifest.json">
     <link rel="apple-touch-icon" href="denicon.png">
-    <title>ㄌㄌ 照護日誌 V7.1 Flagship</title>
+    <title>ㄌㄌ 照護日誌 V7.1.1 Flagship</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;700&family=Cormorant+Garamond:ital,wght@1,600&display=swap" rel="stylesheet">
     <style>
@@ -34,7 +34,7 @@
         .btn-dl { background: #E0E0E0; color: #AAA; flex: 1.2; pointer-events: none; }
         .btn-dl.active { background: var(--gold); color: white; pointer-events: auto; box-shadow: 0 5px 12px rgba(166,141,95,0.3); }
         #render-stage { position: absolute; left: -9999px; top: 0; width: 1000px; pointer-events: none; }
-        .export-page { width: 1000px; background: var(--cream); padding: 60px; box-sizing: border-box; display: flex; flex-direction: column; }
+        .export-page { width: 1000px; background: var(--cream); padding: 60px; box-sizing: border-box; display: flex; flex-direction: column; image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges; }
         .header-final { text-align: center; border-bottom: 1.5px solid var(--gold); padding-bottom: 12px; margin-bottom: 30px; }
         .header-final h1 { margin: 0; color: var(--m-purple); font-size: 30px; font-weight: 700; letter-spacing: 0.5px; }
         .chapter-tag { font-family: 'Cormorant Garamond', serif; font-style: italic; color: var(--gold); font-size: 26px; margin-top: 5px; }
@@ -50,7 +50,7 @@
         .text-content-final { font-size: 18px; line-height: 1.8; color: #333; white-space: pre-wrap; padding-right: 30px; min-height: 40px; padding-bottom: 90px; }
         .cat-deco { position: absolute; right: 15px; bottom: 15px; width: 120px; height: auto; z-index: 10; }
         .footer-final { margin-top: auto; padding-top: 30px; border-top: 1.5px solid var(--m-bg); display: flex; justify-content: space-between; align-items: flex-end; }
-        .slogan-final { font-weight: 700; font-size: 19px; color: var(--m-purple-light); max-width: 650px; line-height: 1.4; }
+        .slogan-final { font-weight: 700; font-size: 19px; color: var(--m-purple-light); max-width: 650px; line-height: 1.4; font-style: italic; opacity: 0.75; }
         .ig-area-final { text-align: right; color: var(--m-purple); font-size: 13px; font-weight: 700; }
         .ig-area-final img { width: 120px; margin-top: 8px; }
         .tag-badge { background: var(--m-bg); color: var(--m-purple); padding: 5px 12px; border-radius: 10px; margin-right: 8px; font-weight: 700; font-size: 15px; display: inline-block; margin-bottom: 8px; }
@@ -61,7 +61,7 @@
 <body>
     <div class="ui-header">
         <h1>嘉義寵物保姆 ㄌㄌ</h1>
-        <p>DOFU SERVICE LOG • WORKSTATION V7.0</p>
+        <p>PET CARE SERVICE LOG • WORKSTATION V7.0</p>
     </div>
     <div class="editor-container">
         <div class="editor-section">
@@ -168,7 +168,7 @@
                 <div class="col-section"><div class="report-title-final">🍴 飲食管理紀錄</div><div class="photo-grid-final" id="stg-p1"></div><div class="text-content-final" id="stg-f"></div><img src="cat_black.png" class="cat-deco"></div>
                 <div class="col-section"><div class="report-title-final">💧 補水觀察紀錄</div><div class="photo-grid-final" id="stg-p7"></div><div class="text-content-final" id="stg-w"></div><img src="cat_striped.png" class="cat-deco"></div>
             </div>
-            <div class="footer-final"><div class="slogan-final">「慢步調陪伴，讓孩子在咀嚼與吞嚥間感受最溫柔的守護。」</div><div class="ig-area-final">歡迎追蹤ㄌㄌ，因為妳家小寶貝可能會上鏡頭喔！<br><img src="ig.png"></div></div>
+            <div class="footer-final"><div class="slogan-final">「慢步調陪伴，讓孩子在咀嚼與吞嚥間感受最溫柔的守護。」</div><div class="ig-area-final">歡迎追蹤ㄌㄌ，因為你家小寶貝可能會上鏡頭喔！<br><img src="ig.png"></div></div>
         </div>
         <div class="export-page" id="page-2">
             <div class="header-final"><h1>嘉義寵物保姆 ㄌㄌ ∥ 到府服務日誌</h1><div class="chapter-tag">Chapter 02. Health & Medical Care</div></div>
@@ -177,7 +177,7 @@
                 <div class="col-section"><div class="report-title-final">💩 健康排泄監測</div><div class="photo-grid-final" id="stg-p13"></div><div class="text-content-final" id="stg-p"></div><img src="cat_orange.png" class="cat-deco"></div>
                 <div class="col-section"><div class="report-title-final">💊 醫囑與保養執行</div><div class="photo-grid-final" id="stg-p19"></div><div class="text-content-final" id="stg-m"></div></div>
             </div>
-            <div class="footer-final"><div class="slogan-final">「細膩的監測，是為了陪孩子走更長、更遠、更穩的路。」</div><div class="ig-area-final">歡迎追蹤ㄌㄌ，因為妳家小寶貝可能會上鏡頭喔！<br><img src="ig.png"></div></div>
+            <div class="footer-final"><div class="slogan-final">「細膩的監測，是為了陪孩子走更長、更遠、更穩的路。」</div><div class="ig-area-final">歡迎追蹤ㄌㄌ，因為你家小寶貝可能會上鏡頭喔！<br><img src="ig.png"></div></div>
         </div>
         <div class="export-page" id="page-3">
             <div class="header-final"><h1>嘉義寵物保姆 ㄌㄌ ∥ 到府服務日誌</h1><div class="chapter-tag">Chapter 03. Interaction & Safety</div></div>
@@ -187,7 +187,7 @@
                 <div class="col-section"><div class="report-title-final">📸 暖心互動紀錄</div><div class="photo-grid-final" id="stg-p26"></div><div class="text-content-final" id="stg-b"></div></div>
                 <div class="col-section" style="background: linear-gradient(135deg, #F2E9E1 0%, #FFFFFF 100%);"><div class="report-title-final">💌 ㄌㄌ 想對毛爸媽說的悄悄話</div><div class="text-content-final" id="stg-t"></div><div id="stg-tags" style="margin-top:10px;"></div><div class="text-content-final" id="stg-sa" style="font-size:16px; border-top:1px dashed #DDD; padding-top:10px; color:var(--gold);"></div><img src="cat_tortie.png" class="cat-deco" style="width:130px;"></div>
             </div>
-            <div class="footer-final"><div class="slogan-final">「生活雖然匆忙，但我會一直在這，陪孩子享受愜意的日常。」</div><div class="ig-area-final">歡迎追蹤ㄌㄌ，因為妳家小寶貝可能會上鏡頭喔！<br><img src="ig.png"></div></div>
+            <div class="footer-final"><div class="slogan-final">「生活雖然匆忙，但我會一直在這，陪孩子享受愜意的日常。」</div><div class="ig-area-final">歡迎追蹤ㄌㄌ，因為你家小寶貝可能會上鏡頭喔！<br><img src="ig.png"></div></div>
         </div>
     </div>
 <script>
@@ -215,7 +215,7 @@
         const staff = document.getElementById('i-s').value;
         const now = new Date();
         const time = `${now.getFullYear()}/${now.getMonth()+1}/${now.getDate()} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
-        document.querySelectorAll('.h-sync').forEach(el => el.innerText = `今日到誰家：${pet} / 負責：${staff}`);
+        document.querySelectorAll('.h-sync').forEach(el => el.innerText = `今日到誰家：${pet} / 負責保姆：${staff}`);
         document.querySelectorAll('.h-date').forEach(el => el.innerText = `日期：${time}`);
         document.getElementById('stg-f').innerText = document.getElementById('i-f').value;
         document.getElementById('stg-w').innerText = document.getElementById('i-w').value;
