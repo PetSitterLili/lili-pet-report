@@ -238,7 +238,7 @@
         document.getElementById('stg-m').innerText = document.getElementById('i-m').value;
         document.getElementById('stg-b').innerText = document.getElementById('i-b').value;
         document.getElementById('stg-t').innerText = document.getElementById('i-t').value;
-        document.getElementById('stg-sa').innerText = document.getElementById('i-sa').value ? "衛生補充：" + document.getElementById('i-sa').value : "";
+        document.getElementById('stg-sa').innerText = document.getElementById('i-sa').value ? "補充說明：" + document.getElementById('i-sa').value : "";
         const tagBox = document.getElementById('stg-tags'); tagBox.innerHTML = "";
         document.querySelectorAll('.tag-btn.active').forEach(t => { tagBox.innerHTML += `<span class="tag-badge">${t.innerText}</span>`; });
         const fds = ['i-h', 'i-f', 'i-w', 'i-p', 'i-m', 'i-b', 'i-t', 'i-sa', 'i-s'];
