@@ -268,7 +268,12 @@
                 canvas.toBlob(blob => {
                     const petName = document.getElementById('i-h').value || "未命名";
                     const pgNames = ["01飲食管理", "02生理監控", "03互動與驗收"];
-                    pageBlobs[num] = { blob, name: `[ㄌㄌ照護]_${petName}_${pgNames[num-1]}.jpg` };
+                    // 產生時間戳記 (格式：20260513_1240)
+                    const n = new Date();
+                    const ts = `${n.getFullYear()}${String(n.getMonth()+1).padStart(2,'0')}${String(n.getDate()).padStart(2,'0')}_${String(n.getHours()).padStart(2,'0')}${String(n.getMinutes()).padStart(2,'0')}`;
+
+                    // 在檔名尾部加上時間戳記
+                    pageBlobs[num] = { blob, name: `[ㄌㄌ照護]_${petName}_${pgNames[num-1]}_${ts}.jpg` };
                     btn.innerText = "✅ 成功";
                     dlBtn.classList.add('active');
                     alert(`✅ 第 0${num} 頁兩欄 A4 報告已備妥！`);
