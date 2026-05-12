@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <link rel="manifest" href="manifest.json">
     <link rel="apple-touch-icon" href="denicon.png">
-    <title>ㄌㄌ 照護日誌 V7.2 Flagship</title>
+    <title>ㄌㄌ 照護日誌 V7.2 Flagship PLUS</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;700&family=Cormorant+Garamond:ital,wght@1,600&display=swap" rel="stylesheet">
     <style>
@@ -42,12 +42,17 @@
         .info-bar-final { display: flex; justify-content: space-between; margin-bottom: 25px; font-size: 18px; color: var(--m-purple); border-bottom: 1px dashed #E0D7EA; padding-bottom: 8px; }
         .report-grid-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 20px; }
         .col-section { background: white; border-radius: 25px; padding: 25px; border: 1px solid rgba(109,91,142,0.06); position: relative; display: flex; flex-direction: column; }
-        .whisper-box { background: var(--milk-tea-gradient); border-radius: 20px; padding: 20px; margin-top: 20px; }
+        
+        /* 悄悄話區塊升級 & 修復壓字 */
+        .whisper-box { background: var(--milk-tea-gradient); border-radius: 20px; padding: 20px; margin-top: 20px; position: relative; }
+        .whisper-box .text-content-final { padding-right: 60px; padding-bottom: 10px; font-weight:700; } /* 修正壓字：右側留白 */
+        
         .report-title-final { font-weight: 700; font-size: 21px; color: var(--m-purple); margin-bottom: 16px; display: flex; align-items: center; }
         .report-title-final::before { content: ""; width: 6px; height: 24px; background: var(--gold); margin-right: 12px; border-radius: 3px; }
         .photo-grid-final { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 15px; }
-        /* 驗收大圖專用樣式 */
-        #stg-p32-wrap { display: flex; flex-direction: column; gap: 15px; margin-bottom: 15px; }
+        
+        /* 驗收大圖與新圖容器樣式 */
+        #stg-p32-wrap, #stg-p37-wrap { display: flex; flex-direction: column; gap: 15px; margin-bottom: 15px; }
         .photo-box-final { width: 100%; aspect-ratio: 3/4; border-radius: 15px; overflow: hidden; background: #F8F8F8; display: none; }
         .photo-box-final.ratio-43 { aspect-ratio: 4 / 3; }
         .photo-box-final img { width: 100%; height: 100%; object-fit: cover; }
@@ -133,12 +138,12 @@
         </div>
         <div class="editor-section">
             <div class="editor-title">💖 CHAPTER 03：互動與驗收</div>
-            <span class="field-label">🌟 今日主打星</span>
+            <span class="field-label">🌟 今日主打星 (互動頂端)</span>
             <div class="photo-box-edit ratio-43" style="width:100%; margin-bottom:10px;">
-                <span>📷 點擊上傳今日主打星</span>
+                <span>📷 點擊上傳主打星橫照</span>
                 <img src=""><input type="file" data-id="p25" onchange="pv(this, 'stg-p25')">
             </div>
-            <span class="field-label">📸 暖心互動紀錄</span>
+            <span class="field-label">📸 暖心互動紀錄群 (V 照)</span>
             <div class="photo-grid-edit">
                 <div class="photo-box-edit"><span>📷1</span><img src=""><input type="file" data-id="p26" onchange="pv(this, 'stg-p26')"></div>
                 <div class="photo-box-edit"><span>📷2</span><img src=""><input type="file" data-id="p27" onchange="pv(this, 'stg-p26')"></div>
@@ -147,14 +152,23 @@
                 <div class="photo-box-edit"><span>📷5</span><img src=""><input type="file" data-id="p30" onchange="pv(this, 'stg-p26')"></div>
                 <div class="photo-box-edit"><span>📷6</span><img src=""><input type="file" data-id="p31" onchange="pv(this, 'stg-p26')"></div>
             </div>
-            <textarea id="i-b" rows="2" placeholder="詳細描述..." oninput="syncText()"></textarea>
+            <span class="field-label">📸 追加互動新圖 (H+2V)</span>
+            <div class="photo-box-edit ratio-43" style="width:100%; margin-bottom:6px;">
+                <span>📷 上傳追加橫照</span>
+                <img src=""><input type="file" data-id="p36" onchange="pv(this, 'stg-p36')">
+            </div>
+            <div class="photo-grid-edit" style="grid-template-columns: 1fr 1fr; margin-bottom:10px;">
+                <div class="photo-box-edit"><span>上傳追加豎照📷1</span><img src=""><input type="file" data-id="p37" onchange="pv(this, 'stg-p37')"></div>
+                <div class="photo-box-edit"><span>上傳追加豎照📷2</span><img src=""><input type="file" data-id="p38" onchange="pv(this, 'stg-p37')"></div>
+            </div>
+            
+            <textarea id="i-b" rows="2" placeholder="互動詳細描述..." oninput="syncText()"></textarea>
             <textarea id="i-t" rows="3" placeholder="💌 ㄌㄌ 想對毛爸媽說的悄悄話..." oninput="syncText()" style="border: 2px solid var(--gold); margin-top:10px;"></textarea>
-            <span class="field-label">🛡️ 安全衛生驗收</span>
-            <div class="photo-grid-edit" style="grid-template-columns: 1fr 1fr;">
-                <div class="photo-box-edit ratio-43"><span>驗收📷1</span><img src=""><input type="file" data-id="p32" onchange="pv(this, 'stg-p32')"></div>
-                <div class="photo-box-edit ratio-43"><span>驗收📷2</span><img src=""><input type="file" data-id="p33" onchange="pv(this, 'stg-p32')"></div>
-                <div class="photo-box-edit ratio-43"><span>驗收📷3</span><img src=""><input type="file" data-id="p34" onchange="pv(this, 'stg-p32')"></div>
-                <div class="photo-box-edit ratio-43"><span>驗收📷4</span><img src=""><input type="file" data-id="p35" onchange="pv(this, 'stg-p32')"></div>
+            <span class="field-label">🛡️ 安全衛生驗收 (CSI 大圖版)</span>
+            <div class="photo-grid-edit" style="grid-template-columns: 1fr;"> <div class="photo-box-edit ratio-43"><span>查核📷1</span><img src=""><input type="file" data-id="p32" onchange="pv(this, 'stg-p32')"></div>
+                <div class="photo-box-edit ratio-43"><span>查核📷2</span><img src=""><input type="file" data-id="p33" onchange="pv(this, 'stg-p32')"></div>
+                <div class="photo-box-edit ratio-43"><span>查核📷3</span><img src=""><input type="file" data-id="p34" onchange="pv(this, 'stg-p32')"></div>
+                <div class="photo-box-edit ratio-43"><span>查核📷4</span><img src=""><input type="file" data-id="p35" onchange="pv(this, 'stg-p32')"></div>
             </div>
             <div class="tag-container" style="margin-top:10px;">
                 <div class="tag-btn" onclick="tg(this)">✅清潔完成</div><div class="tag-btn" onclick="tg(this)">✅零食玩具歸位</div><div class="tag-btn" onclick="tg(this)">✅電器安全巡查</div><div class="tag-btn" onclick="tg(this)">✅門窗鎖閉確認</div>
@@ -193,18 +207,16 @@
             <div class="report-grid-2col">
                 <div class="col-section">
                     <div class="report-title-final">📸 暖心互動紀錄</div>
-                    <div id="stg-p25-wrap" style="width:100%; margin-bottom:15px;"></div> <div class="photo-grid-final" id="stg-p26"></div>
-                    <div class="text-content-final" id="stg-b"></div>
+                    <div id="stg-p25-wrap" style="width:100%; margin-bottom:15px;"></div> <div class="photo-grid-final" id="stg-p26"></div> <div id="stg-p36-wrap" style="width:100%; margin-bottom:12px;"></div> <div class="photo-grid-final" style="grid-template-columns: 1fr 1fr;" id="stg-p37"></div> <div class="text-content-final" id="stg-b"></div>
                 </div>
                 <div class="col-section">
-                    <div class="report-title-final">🛡️ 安全衛生驗收</div>
+                    <div class="report-title-final">🛡️ 安全衛生驗收 (查核證據大圖)</div>
                     <div id="stg-p32-wrap"></div> <div id="stg-tags" style="margin-top:10px;"></div>
                     <div class="text-content-final" id="stg-sa" style="font-size:16px; border-top:1px dashed #DDD; padding-top:15px; color:var(--gold); margin-top:10px;"></div>
                     
                     <div class="whisper-box">
-                        <div class="report-title-final">💌 ㄌㄌ 想對毛爸媽說的悄悄話</div>
-                        <div class="text-content-final" id="stg-t" style="padding-bottom: 5px; font-weight:700;"></div>
-                    </div>
+                        <div class="report-title-final">💌 想對毛爸媽說的悄悄話</div>
+                        <div class="text-content-final" id="stg-t"></div> </div>
                     <img src="cat_tortie.png" class="cat-deco" style="width:130px;">
                 </div>
             </div>
@@ -262,16 +274,21 @@
         savePhotoDB(pid, b64);
         
         let targetId = stgId;
-        if (stgId === 'stg-p25') targetId = 'stg-p25-wrap';
-        if (stgId === 'stg-p32') targetId = 'stg-p32-wrap';
+        // 修正邏輯：精準對齊新的輸出容器
+        if (stgId === 'stg-p25') targetId = 'stg-p25-wrap'; // 主打星
+        if (stgId === 'stg-p36') targetId = 'stg-p36-wrap'; //追加橫圖
+        if (stgId === 'stg-p32') targetId = 'stg-p32-wrap'; //環境查核大圖堆疊
         
         const stage = document.getElementById(targetId);
         let target = stage.querySelector(`[data-stg="${pid}"]`);
         
         if (!target) { 
             target = document.createElement('div'); 
-            // 決定比例與外觀
-            target.className = (stgId === 'stg-p32' || stgId === 'stg-p25') ? "photo-box-final ratio-43" : "photo-box-final"; 
+            // 決定比例：主打(p25)、追加橫(p36)、驗收查核(p32-p35) 皆為 4:3 橫向大圖
+            target.className = (pid === 'p25' || pid === 'p36' || pid === 'p32' || pid === 'p33' || pid === 'p34' || pid === 'p35') ? "photo-box-final ratio-43" : "photo-box-final"; 
+            
+            // p25 與 p36 設為滿版
+            if (pid === 'p25' || pid === 'p36') target.style.width = "100%"; 
             target.setAttribute('data-stg', pid); 
             stage.appendChild(target); 
         }
