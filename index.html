@@ -5,12 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <link rel="manifest" href="manifest.json">
     <link rel="apple-touch-icon" href="denicon.png">
-    <title>ㄌㄌ 照護日誌 V6.6 Final</title>
+    <title>ㄌㄌ 照護日誌 V6.7 Flagship</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@600;700&family=Cormorant+Garamond:ital,wght@1,600&display=swap" rel="stylesheet">
     <style>
         :root {
-            --m-purple: #5A4E70; /* 灰調深紫 */
+            --m-purple: #5A4E70; /* 灰調莫蘭迪紫 */
             --m-purple-light: #9B92B0;
             --m-bg: #F4F0F7;
             --cream: #FFFDF9;
@@ -21,13 +21,11 @@
         body { background-color: var(--m-bg); font-family: 'Noto Serif TC', serif; color: var(--text-serif); margin: 0; padding: 15px; display: flex; flex-direction: column; align-items: center; }
 
         /* --- 編輯區 UI --- */
-        .editor-container { width: 100%; max-width: 500px; padding-bottom: 50px; }
-        
-        /* UI 頂部標頭 */
         .ui-header { text-align: center; margin-bottom: 25px; }
         .ui-header h1 { color: var(--m-purple); font-size: 24px; margin: 0; letter-spacing: 1px; }
         .ui-header p { color: var(--m-purple-light); font-size: 11px; letter-spacing: 2px; margin-top: 5px; }
 
+        .editor-container { width: 100%; max-width: 500px; padding-bottom: 50px; }
         .editor-section { background: white; border-radius: 25px; padding: 22px; margin-bottom: 20px; box-shadow: 0 8px 25px rgba(0,0,0,0.04); }
         .editor-title { font-weight: 700; color: var(--m-purple); margin-bottom: 12px; font-size: 17px; border-left: 4px solid var(--gold); padding-left: 10px; }
         .field-label { font-size: 12px; color: var(--m-purple-light); font-weight: 700; margin: 12px 0 6px; display: block; }
@@ -38,12 +36,13 @@
             font-family: 'Noto Serif TC', serif; outline: none;
         }
 
+        /* 修正編輯格排版：一排 3 格，兩排 */
         .photo-grid-edit { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
         .photo-box-edit { position: relative; aspect-ratio: 3 / 4; border-radius: 10px; background: #F0F0F0; border: 1px dashed var(--m-purple-light); display: flex; align-items: center; justify-content: center; overflow: hidden; }
         .photo-box-edit.ratio-43 { aspect-ratio: 4 / 3; }
-        .photo-box-edit img { width: 100%; height: 100%; object-fit: cover; }
+        .photo-box-edit img { width: 100%; height: 100%; object-fit: cover; z-index: 2; position: absolute; top: 0; left: 0; }
         .photo-box-edit input { position: absolute; opacity: 0; width: 100%; height: 100%; cursor: pointer; z-index: 5; }
-        .photo-box-edit span { font-size: 10px; color: var(--m-purple-light); }
+        .photo-box-edit span { font-size: 10px; color: var(--m-purple-light); z-index: 1; }
 
         /* --- 按鈕樣式 --- */
         .btn-stack { display: flex; gap: 8px; margin-top: 15px; }
@@ -52,10 +51,8 @@
         .btn-dl { background: #E0E0E0; color: #AAA; flex: 1.2; pointer-events: none; }
         .btn-dl.active { background: var(--gold); color: white; pointer-events: auto; box-shadow: 0 5px 12px rgba(166,141,95,0.3); }
 
-        /* --- 隱藏模板 (使用透明度與位移，不使用 display:none 防止卡死) --- */
+        /* --- 隔離渲染區 (不干擾背景) --- */
         .render-stage-hidden { position: fixed; top: 0; left: -2000px; opacity: 0; pointer-events: none; width: 1000px; }
-        
-        /* --- 報告正式排版 (A4) --- */
         .export-page { width: 1000px; background: var(--cream); padding: 60px; box-sizing: border-box; display: flex; flex-direction: column; }
         
         .header-final { text-align: center; border-bottom: 1.5px solid var(--gold); padding-bottom: 12px; margin-bottom: 30px; }
@@ -72,17 +69,15 @@
         .photo-box-final { width: 100%; aspect-ratio: 3/4; border-radius: 18px; overflow: hidden; background: #F8F8F8; }
         .photo-box-final.ratio-43 { aspect-ratio: 4 / 3; }
         .photo-box-final img { width: 100%; height: 100%; object-fit: cover; }
-        /* 沒圖時縮小空間 */
         .photo-box-final:not(:has(img[src^="data"])) { display: none; }
 
         .text-content-final { font-size: 18px; line-height: 1.8; color: #333; white-space: pre-wrap; padding-right: 140px; min-height: 40px;}
         .cat-deco { position: absolute; right: 25px; bottom: 20px; width: 140px; height: auto; }
 
-        /* 頁尾精緻化 */
         .footer-final { margin-top: auto; padding-top: 30px; border-top: 1.5px solid var(--m-bg); display: flex; justify-content: space-between; align-items: flex-end; }
         .slogan-final { font-weight: 700; font-size: 18px; color: var(--m-purple-light); max-width: 650px; line-height: 1.4; }
         .ig-area-final { text-align: right; color: var(--m-purple); font-size: 13px; font-weight: 700; }
-        .ig-area-final img { width: 110px; margin-top: 8px; }
+        .ig-area-final img { width: 120px; margin-top: 8px; }
         
         .tag-badge { background: var(--m-bg); color: var(--m-purple); padding: 5px 12px; border-radius: 10px; margin-right: 8px; font-weight: 700; font-size: 15px; display: inline-block; margin-bottom: 8px; }
         .tag-btn { background: #EEE; padding: 7px 12px; border-radius: 20px; font-size: 12px; cursor: pointer; margin: 2px; display: inline-block; }
@@ -93,7 +88,7 @@
 
     <div class="ui-header">
         <h1>嘉義寵物保姆 ㄌㄌ</h1>
-        <p>DOFU SERVICE LOG • WORKSTATION V6.6</p>
+        <p>DOFU SERVICE LOG • WORKSTATION V6.7</p>
     </div>
 
     <div class="editor-container">
@@ -203,29 +198,29 @@
         <div class="export-page" id="page-1">
             <div class="header-final"><h1>嘉義寵物保姆 ㄌㄌ ∥ 到府服務日誌</h1><div class="chapter-tag">Chapter 01. Nutrition & Hydration</div></div>
             <div class="info-bar-final"><span class="h-sync"></span><span class="h-date"></span></div>
-            <div class="report-section-final"><div class="report-title-final">🍴 進食狀況紀錄</div><div class="photo-grid-final" id="s1-f"></div><div class="text-content-final" id="stg-f"></div><img src="cat_black.png" class="cat-deco"></div>
-            <div class="report-section-final"><div class="report-title-final">💧 補水與觀察紀錄</div><div class="photo-grid-final" id="s1-w"></div><div class="text-content-final" id="stg-w"></div><img src="cat_striped.png" class="cat-deco"></div>
-            <div class="footer-final"><div class="slogan-final">「慢步調陪伴，讓孩子在咀嚼與吞嚥間感受最溫柔的守護。」</div><div class="ig-area-final">歡迎追蹤ㄌㄌ，妳家小寶貝可能會上鏡頭喔！<br><img src="ig.png"></div></div>
+            <div class="report-section-final"><div class="report-title-final">🍴 進食狀況紀錄</div><div class="photo-grid-final" id="stg-p1"></div><div class="text-content-final" id="stg-f"></div><img src="cat_black.png" class="cat-deco"></div>
+            <div class="report-section-final"><div class="report-title-final">💧 補水與觀察紀錄</div><div class="photo-grid-final" id="stg-p7"></div><div class="text-content-final" id="stg-w"></div><img src="cat_striped.png" class="cat-deco"></div>
+            <div class="footer-final"><div class="slogan-final">「慢步調陪伴，讓孩子在咀嚼與吞嚥間感受最溫柔的守護。」</div><div class="ig-area-final">歡迎追蹤ㄌㄌ，因為妳家小寶貝可能會上鏡頭喔！<br><img src="ig.png"></div></div>
         </div>
         <div class="export-page" id="page-2">
             <div class="header-final"><h1>嘉義寵物保姆 ㄌㄌ ∥ 到府服務日誌</h1><div class="chapter-tag">Chapter 02. Health & Medical Care</div></div>
             <div class="info-bar-final"><span class="h-sync"></span><span class="h-date"></span></div>
-            <div class="report-section-final"><div class="report-title-final">💩 排泄狀況監測</div><div class="photo-grid-final" id="s2-p"></div><div class="text-content-final" id="stg-p"></div><img src="cat_orange.png" class="cat-deco"></div>
-            <div class="report-section-final"><div class="report-title-final">💊 醫囑與保養執行</div><div class="photo-grid-final" id="s2-m"></div><div class="text-content-final" id="stg-m"></div></div>
-            <div class="footer-final"><div class="slogan-final">「細膩的監測，是為了陪孩子走更長、更遠、更穩的路。」</div><div class="ig-area-final">歡迎追蹤ㄌㄌ，妳家小寶貝可能會上鏡頭喔！<br><img src="ig.png"></div></div>
+            <div class="report-section-final"><div class="report-title-final">💩 排泄狀況監測</div><div class="photo-grid-final" id="stg-p13"></div><div class="text-content-final" id="stg-p"></div><img src="cat_orange.png" class="cat-footer"></div>
+            <div class="report-section-final"><div class="report-title-final">💊 醫囑與保養執行</div><div class="photo-grid-final" id="stg-p19"></div><div class="text-content-final" id="stg-m"></div></div>
+            <div class="footer-final"><div class="slogan-final">「細膩的監測，是為了陪孩子走更長、更遠、更穩的路。」</div><div class="ig-area-final">歡迎追蹤ㄌㄌ，因為妳家小寶貝可能會上鏡頭喔！<br><img src="ig.png"></div></div>
         </div>
         <div class="export-page" id="page-3">
             <div class="header-final"><h1>嘉義寵物保姆 ㄌㄌ ∥ 到府服務日誌</h1><div class="chapter-tag">Chapter 03. Interaction & Safety</div></div>
             <div class="info-bar-final"><span class="h-sync"></span><span class="h-date"></span></div>
-            <div class="report-section-final"><div class="report-title-final">📸 今日暖心互動</div><div id="s3-h" class="photo-box-final ratio-43" style="width:100%; margin-bottom:15px;"></div><div class="photo-grid-final" id="s3-b"></div><div class="text-content-final" id="stg-b"></div></div>
+            <div class="report-section-final"><div class="report-title-final">📸 今日暖心互動</div><div id="stg-p25" class="photo-box-final ratio-43" style="width:100%; margin-bottom:15px;"></div><div class="photo-grid-final" id="stg-p26"></div><div class="text-content-final" id="stg-b"></div></div>
             <div class="report-section-final" style="background:#FFF9F5;"><div class="report-title-final">💌 ㄌㄌ 的專業悄悄話</div><div class="text-content-final" id="stg-t"></div><img src="cat_tortie.png" class="cat-deco" style="width:130px;"></div>
-            <div class="report-section-final"><div class="report-title-final">🛡️ 全景安全衛生確認</div><div class="photo-grid-final" id="s3-sa" style="grid-template-columns: 1fr 1fr;"></div><div id="stg-tags"></div><div class="text-content-final" id="stg-sa-txt"></div></div>
-            <div class="footer-final"><div class="slogan-final">「生活雖然匆忙，但我會一直在這，陪孩子享受愜意的日常。」</div><div class="ig-area-final">歡迎追蹤ㄌㄌ，妳家小寶貝可能會上鏡頭喔！<br><img src="ig.png"></div></div>
+            <div class="report-section-final"><div class="report-title-final">🛡️ 安全衛生驗收</div><div class="photo-grid-final" id="stg-p32" style="grid-template-columns: 1fr 1fr;"></div><div id="stg-tags"></div><div class="text-content-final" id="stg-sa-txt"></div></div>
+            <div class="footer-final"><div class="slogan-final">「生活雖然匆忙，但我會一直在這，陪孩子享受愜意的日常。」</div><div class="ig-area-final">歡迎追蹤ㄌㄌ，因為妳家小寶貝可能會上鏡頭喔！<br><img src="ig.png"></div></div>
         </div>
     </div>
 
 <script>
-    const dbName = "LiliVault_V6_6";
+    const dbName = "LiliVault_V6_7";
     let db, pageBlobs = {};
     const req = indexedDB.open(dbName, 1);
     req.onupgradeneeded = e => e.target.result.createObjectStore("photos");
@@ -268,14 +263,31 @@
     }
 
     function tg(b) { b.classList.toggle('active'); localStorage.setItem('tags', JSON.stringify(Array.from(document.querySelectorAll('.tag-btn.active')).map(x => x.innerText))); syncText(); }
-    function pv(i, stgId) { if (i.files[0]) { const r = new FileReader(); r.onload = e => updateStageImg(stgId, i.getAttribute('data-id'), e.target.result, i); r.readAsDataURL(i.files[0]); } }
+    
+    function pv(i, stgId) { 
+        if (i.files[0]) { 
+            const r = new FileReader(); 
+            r.onload = e => updateStageImg(stgId, i.getAttribute('data-id'), e.target.result, i); 
+            r.readAsDataURL(i.files[0]); 
+        } 
+    }
 
     function updateStageImg(stgId, pid, b64, inputEl) {
-        inputEl.parentElement.querySelector('img').src = b64; savePhotoDB(pid, b64);
+        const parent = inputEl.parentElement;
+        parent.querySelector('img').src = b64;
+        // 核心修正：隱藏占位文字標籤
+        parent.querySelector('span').style.display = 'none';
+        savePhotoDB(pid, b64);
+        
         const stage = document.getElementById(stgId);
         if (pid === 'p25') { stage.innerHTML = `<img src="${b64}">`; return; }
         let target = stage.querySelector(`[data-stg="${pid}"]`);
-        if (!target) { target = document.createElement('div'); target.className = (stgId === 's3-sa') ? "photo-box-final ratio-43" : "photo-box-final"; target.setAttribute('data-stg', pid); stage.appendChild(target); }
+        if (!target) { 
+            target = document.createElement('div'); 
+            target.className = (stgId === 's3-sa') ? "photo-box-final ratio-43" : "photo-box-final"; 
+            target.setAttribute('data-stg', pid); 
+            stage.appendChild(target); 
+        }
         target.innerHTML = `<img src="${b64}">`;
     }
 
@@ -285,29 +297,26 @@
         const btn = document.getElementById(`gen-${num}`);
         const dlBtn = document.getElementById(`dl-${num}`);
         btn.innerText = "⚡ 壓製中...";
+        dlBtn.classList.remove('active');
         syncText();
 
         const target = document.getElementById(`page-${num}`);
         const parent = target.parentElement;
-        parent.style.opacity = "1"; // 瞬間讓它「被看見」
+        parent.style.opacity = "1";
 
         setTimeout(() => {
             html2canvas(target, { useCORS: true, scale: 2.2, backgroundColor: "#FFFDF9", logging: false }).then(canvas => {
                 canvas.toBlob(blob => {
                     const petName = document.getElementById('i-h').value || "未命名";
-                    const pgNames = ["01飲食補水", "02生理醫囑", "03互動驗收"];
+                    const pgNames = ["01飲食補水", "02健康監測", "03互動驗收"];
                     pageBlobs[num] = { blob, name: `[ㄌㄌ照護]_${petName}_${pgNames[num-1]}.jpg` };
                     btn.innerText = "✅ 成功";
                     dlBtn.classList.add('active');
                     parent.style.opacity = "0";
                     alert(`✅ 第 0${num} 頁壓製完畢！`);
                 }, 'image/jpeg', 0.85);
-            }).catch(e => {
-                btn.innerText = "❌ 失敗";
-                parent.style.opacity = "0";
-                console.log(e);
-            });
-        }, 400);
+            }).catch(e => { btn.innerText = "❌ 失敗"; parent.style.opacity = "0"; });
+        }, 500);
     }
     function trigDL(n) { if (pageBlobs[n]) { const a = document.createElement('a'); a.href = URL.createObjectURL(pageBlobs[n].blob); a.download = pageBlobs[n].name; a.click(); } }
 </script>
