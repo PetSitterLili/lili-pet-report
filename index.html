@@ -5,12 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <link rel="manifest" href="manifest.json">
     <link rel="apple-touch-icon" href="denicon.png">
-    <title>ㄌㄌ 照護日誌 V6.8 Flagship</title>
+    <title>ㄌㄌ 照護日誌 V6.7 Flagship</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700&family=Cormorant+Garamond:ital,wght@1,600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@600;700&family=Cormorant+Garamond:ital,wght@1,600&display=swap" rel="stylesheet">
     <style>
         :root {
-            --m-purple: #5A4E70; /* 灰調深紫 */
+            --m-purple: #5A4E70; /* 灰調莫蘭迪紫 */
             --m-purple-light: #9B92B0;
             --m-bg: #F4F0F7;
             --cream: #FFFDF9;
@@ -21,9 +21,9 @@
         body { background-color: var(--m-bg); font-family: 'Noto Serif TC', serif; color: var(--text-serif); margin: 0; padding: 15px; display: flex; flex-direction: column; align-items: center; }
 
         /* --- 編輯區 UI --- */
-        .ui-header { text-align: center; margin-bottom: 25px; padding-top: 10px; }
-        .ui-header h1 { color: var(--m-purple); font-size: 26px; margin: 0; font-weight: 700; letter-spacing: 1px; }
-        .ui-header p { color: var(--m-purple-light); font-size: 11px; letter-spacing: 3px; margin-top: 5px; }
+        .ui-header { text-align: center; margin-bottom: 25px; }
+        .ui-header h1 { color: var(--m-purple); font-size: 24px; margin: 0; letter-spacing: 1px; }
+        .ui-header p { color: var(--m-purple-light); font-size: 11px; letter-spacing: 2px; margin-top: 5px; }
 
         .editor-container { width: 100%; max-width: 500px; padding-bottom: 50px; }
         .editor-section { background: white; border-radius: 25px; padding: 22px; margin-bottom: 20px; box-shadow: 0 8px 25px rgba(0,0,0,0.04); }
@@ -36,21 +36,22 @@
             font-family: 'Noto Serif TC', serif; outline: none;
         }
 
+        /* 修正編輯格排版：一排 3 格，兩排 */
         .photo-grid-edit { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
         .photo-box-edit { position: relative; aspect-ratio: 3 / 4; border-radius: 10px; background: #F0F0F0; border: 1px dashed var(--m-purple-light); display: flex; align-items: center; justify-content: center; overflow: hidden; }
         .photo-box-edit.ratio-43 { aspect-ratio: 4 / 3; }
-        .photo-box-edit img { width: 100%; height: 100%; object-fit: cover; z-index: 2; position: absolute; top: 0; left: 0; display: none; }
+        .photo-box-edit img { width: 100%; height: 100%; object-fit: cover; z-index: 2; position: absolute; top: 0; left: 0; }
         .photo-box-edit input { position: absolute; opacity: 0; width: 100%; height: 100%; cursor: pointer; z-index: 5; }
         .photo-box-edit span { font-size: 10px; color: var(--m-purple-light); z-index: 1; }
 
-        /* --- 按鈕 --- */
+        /* --- 按鈕樣式 --- */
         .btn-stack { display: flex; gap: 8px; margin-top: 15px; }
         .btn { border: none; padding: 14px; border-radius: 50px; font-weight: 700; cursor: pointer; font-family: 'Noto Serif TC', serif; font-size: 14px; transition: 0.3s; }
         .btn-gen { background: var(--m-purple); color: white; flex: 2; }
         .btn-dl { background: #E0E0E0; color: #AAA; flex: 1.2; pointer-events: none; }
         .btn-dl.active { background: var(--gold); color: white; pointer-events: auto; box-shadow: 0 5px 12px rgba(166,141,95,0.3); }
 
-        /* --- 隱藏模板區 (關鍵修正：預設存在於 DOM) --- */
+        /* --- 隔離渲染區 (不干擾背景) --- */
         .render-stage-hidden { position: fixed; top: 0; left: -2000px; opacity: 0; pointer-events: none; width: 1000px; }
         .export-page { width: 1000px; background: var(--cream); padding: 60px; box-sizing: border-box; display: flex; flex-direction: column; }
         
@@ -62,12 +63,13 @@
 
         .report-section-final { background: white; border-radius: 25px; padding: 28px; margin-bottom: 25px; position: relative; border: 1px solid rgba(109,91,142,0.06); }
         .report-title-final { font-weight: 700; font-size: 21px; color: var(--m-purple); margin-bottom: 16px; display: flex; align-items: center; }
-        .report-title-final::before { content: ""; width: 6px; height: 22px; background: var(--gold); margin-right: 12px; border-radius: 2px; }
+        .report-title-final::before { content: ""; width: 6px; height: 24px; background: var(--gold); margin-right: 12px; border-radius: 2px; }
 
         .photo-grid-final { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px; }
-        .photo-box-final { width: 100%; aspect-ratio: 3/4; border-radius: 18px; overflow: hidden; background: #F8F8F8; display: none; }
+        .photo-box-final { width: 100%; aspect-ratio: 3/4; border-radius: 18px; overflow: hidden; background: #F8F8F8; }
         .photo-box-final.ratio-43 { aspect-ratio: 4 / 3; }
         .photo-box-final img { width: 100%; height: 100%; object-fit: cover; }
+        .photo-box-final:not(:has(img[src^="data"])) { display: none; }
 
         .text-content-final { font-size: 18px; line-height: 1.8; color: #333; white-space: pre-wrap; padding-right: 140px; min-height: 40px;}
         .cat-deco { position: absolute; right: 25px; bottom: 20px; width: 140px; height: auto; }
@@ -75,7 +77,7 @@
         .footer-final { margin-top: auto; padding-top: 30px; border-top: 1.5px solid var(--m-bg); display: flex; justify-content: space-between; align-items: flex-end; }
         .slogan-final { font-weight: 700; font-size: 18px; color: var(--m-purple-light); max-width: 650px; line-height: 1.4; }
         .ig-area-final { text-align: right; color: var(--m-purple); font-size: 13px; font-weight: 700; }
-        .ig-area-final img { width: 110px; margin-top: 8px; }
+        .ig-area-final img { width: 120px; margin-top: 8px; }
         
         .tag-badge { background: var(--m-bg); color: var(--m-purple); padding: 5px 12px; border-radius: 10px; margin-right: 8px; font-weight: 700; font-size: 15px; display: inline-block; margin-bottom: 8px; }
         .tag-btn { background: #EEE; padding: 7px 12px; border-radius: 20px; font-size: 12px; cursor: pointer; margin: 2px; display: inline-block; }
@@ -86,7 +88,7 @@
 
     <div class="ui-header">
         <h1>嘉義寵物保姆 ㄌㄌ</h1>
-        <p>DOFU SERVICE LOG • WORKSTATION V6.8</p>
+        <p>DOFU SERVICE LOG • WORKSTATION V6.7</p>
     </div>
 
     <div class="editor-container">
@@ -104,24 +106,24 @@
             <div class="editor-title">🥣 CHAPTER 01：飲食與補水</div>
             <span class="field-label">🍴 進食狀況紀錄</span>
             <div class="photo-grid-edit">
-                <div class="photo-box-edit"><span>📷1</span><img src=""><input type="file" data-id="p1" onchange="pv(this, 'stg-p1')"></div>
-                <div class="photo-box-edit"><span>📷2</span><img src=""><input type="file" data-id="p2" onchange="pv(this, 'stg-p1')"></div>
-                <div class="photo-box-edit"><span>📷3</span><img src=""><input type="file" data-id="p3" onchange="pv(this, 'stg-p1')"></div>
-                <div class="photo-box-edit"><span>📷4</span><img src=""><input type="file" data-id="p4" onchange="pv(this, 'stg-p1')"></div>
-                <div class="photo-box-edit"><span>📷5</span><img src=""><input type="file" data-id="p5" onchange="pv(this, 'stg-p1')"></div>
-                <div class="photo-box-edit"><span>📷6</span><img src=""><input type="file" data-id="p6" onchange="pv(this, 'stg-p1')"></div>
+                <div class="photo-box-edit"><span>📷1</span><img src=""><input type="file" data-id="p1" onchange="pv(this, 's1-f')"></div>
+                <div class="photo-box-edit"><span>📷2</span><img src=""><input type="file" data-id="p2" onchange="pv(this, 's1-f')"></div>
+                <div class="photo-box-edit"><span>📷3</span><img src=""><input type="file" data-id="p3" onchange="pv(this, 's1-f')"></div>
+                <div class="photo-box-edit"><span>📷4</span><img src=""><input type="file" data-id="p4" onchange="pv(this, 's1-f')"></div>
+                <div class="photo-box-edit"><span>📷5</span><img src=""><input type="file" data-id="p5" onchange="pv(this, 's1-f')"></div>
+                <div class="photo-box-edit"><span>📷6</span><img src=""><input type="file" data-id="p6" onchange="pv(this, 's1-f')"></div>
             </div>
-            <textarea id="i-f" rows="2" placeholder="填寫詳細描述..." oninput="syncText()"></textarea>
+            <textarea id="i-f" rows="2" placeholder="詳細描述..." oninput="syncText()"></textarea>
             <span class="field-label">💧 補水觀察紀錄</span>
             <div class="photo-grid-edit">
-                <div class="photo-box-edit"><span>📷1</span><img src=""><input type="file" data-id="p7" onchange="pv(this, 'stg-p7')"></div>
-                <div class="photo-box-edit"><span>📷2</span><img src=""><input type="file" data-id="p8" onchange="pv(this, 'stg-p7')"></div>
-                <div class="photo-box-edit"><span>📷3</span><img src=""><input type="file" data-id="p9" onchange="pv(this, 'stg-p7')"></div>
-                <div class="photo-box-edit"><span>📷4</span><img src=""><input type="file" data-id="p10" onchange="pv(this, 'stg-p7')"></div>
-                <div class="photo-box-edit"><span>📷5</span><img src=""><input type="file" data-id="p11" onchange="pv(this, 'stg-p7')"></div>
-                <div class="photo-box-edit"><span>📷6</span><img src=""><input type="file" data-id="p12" onchange="pv(this, 'stg-p7')"></div>
+                <div class="photo-box-edit"><span>📷1</span><img src=""><input type="file" data-id="p7" onchange="pv(this, 's1-w')"></div>
+                <div class="photo-box-edit"><span>📷2</span><img src=""><input type="file" data-id="p8" onchange="pv(this, 's1-w')"></div>
+                <div class="photo-box-edit"><span>📷3</span><img src=""><input type="file" data-id="p9" onchange="pv(this, 's1-w')"></div>
+                <div class="photo-box-edit"><span>📷4</span><img src=""><input type="file" data-id="p10" onchange="pv(this, 's1-w')"></div>
+                <div class="photo-box-edit"><span>📷5</span><img src=""><input type="file" data-id="p11" onchange="pv(this, 's1-w')"></div>
+                <div class="photo-box-edit"><span>📷6</span><img src=""><input type="file" data-id="p12" onchange="pv(this, 's1-w')"></div>
             </div>
-            <textarea id="i-w" rows="2" placeholder="填寫詳細描述..." oninput="syncText()"></textarea>
+            <textarea id="i-w" rows="2" placeholder="詳細描述..." oninput="syncText()"></textarea>
             <div class="btn-stack">
                 <button id="gen-1" class="btn btn-gen" onclick="generate(1)">🚀 產生高清報告圖</button>
                 <button id="dl-1" class="btn btn-dl" onclick="trigDL(1)">📥 下載</button>
@@ -132,24 +134,24 @@
             <div class="editor-title">🔍 CHAPTER 02：生理與醫囑</div>
             <span class="field-label">💩 排泄狀況監測</span>
             <div class="photo-grid-edit">
-                <div class="photo-box-edit"><span>📷1</span><img src=""><input type="file" data-id="p13" onchange="pv(this, 'stg-p13')"></div>
-                <div class="photo-box-edit"><span>📷2</span><img src=""><input type="file" data-id="p14" onchange="pv(this, 'stg-p13')"></div>
-                <div class="photo-box-edit"><span>📷3</span><img src=""><input type="file" data-id="p15" onchange="pv(this, 'stg-p13')"></div>
-                <div class="photo-box-edit"><span>📷4</span><img src=""><input type="file" data-id="p16" onchange="pv(this, 'stg-p13')"></div>
-                <div class="photo-box-edit"><span>📷5</span><img src=""><input type="file" data-id="p17" onchange="pv(this, 'stg-p13')"></div>
-                <div class="photo-box-edit"><span>📷6</span><img src=""><input type="file" data-id="p18" onchange="pv(this, 'stg-p13')"></div>
+                <div class="photo-box-edit"><span>📷1</span><img src=""><input type="file" data-id="p13" onchange="pv(this, 's2-p')"></div>
+                <div class="photo-box-edit"><span>📷2</span><img src=""><input type="file" data-id="p14" onchange="pv(this, 's2-p')"></div>
+                <div class="photo-box-edit"><span>📷3</span><img src=""><input type="file" data-id="p15" onchange="pv(this, 's2-p')"></div>
+                <div class="photo-box-edit"><span>📷4</span><img src=""><input type="file" data-id="p16" onchange="pv(this, 's2-p')"></div>
+                <div class="photo-box-edit"><span>📷5</span><img src=""><input type="file" data-id="p17" onchange="pv(this, 's2-p')"></div>
+                <div class="photo-box-edit"><span>📷6</span><img src=""><input type="file" data-id="p18" onchange="pv(this, 's2-p')"></div>
             </div>
-            <textarea id="i-p" rows="2" placeholder="填寫詳細描述..." oninput="syncText()"></textarea>
+            <textarea id="i-p" rows="2" placeholder="詳細描述..." oninput="syncText()"></textarea>
             <span class="field-label">💊 醫囑與保養執行</span>
             <div class="photo-grid-edit">
-                <div class="photo-box-edit"><span>📷1</span><img src=""><input type="file" data-id="p19" onchange="pv(this, 'stg-p19')"></div>
-                <div class="photo-box-edit"><span>📷2</span><img src=""><input type="file" data-id="p20" onchange="pv(this, 'stg-p19')"></div>
-                <div class="photo-box-edit"><span>📷3</span><img src=""><input type="file" data-id="p21" onchange="pv(this, 'stg-p19')"></div>
-                <div class="photo-box-edit"><span>📷4</span><img src=""><input type="file" data-id="p22" onchange="pv(this, 'stg-p19')"></div>
-                <div class="photo-box-edit"><span>📷5</span><img src=""><input type="file" data-id="p23" onchange="pv(this, 'stg-p19')"></div>
-                <div class="photo-box-edit"><span>📷6</span><img src=""><input type="file" data-id="p24" onchange="pv(this, 'stg-p19')"></div>
+                <div class="photo-box-edit"><span>📷1</span><img src=""><input type="file" data-id="p19" onchange="pv(this, 's2-m')"></div>
+                <div class="photo-box-edit"><span>📷2</span><img src=""><input type="file" data-id="p20" onchange="pv(this, 's2-m')"></div>
+                <div class="photo-box-edit"><span>📷3</span><img src=""><input type="file" data-id="p21" onchange="pv(this, 's2-m')"></div>
+                <div class="photo-box-edit"><span>📷4</span><img src=""><input type="file" data-id="p22" onchange="pv(this, 's2-m')"></div>
+                <div class="photo-box-edit"><span>📷5</span><img src=""><input type="file" data-id="p23" onchange="pv(this, 's2-m')"></div>
+                <div class="photo-box-edit"><span>📷6</span><img src=""><input type="file" data-id="p24" onchange="pv(this, 's2-m')"></div>
             </div>
-            <textarea id="i-m" rows="2" placeholder="填寫詳細描述..." oninput="syncText()"></textarea>
+            <textarea id="i-m" rows="2" placeholder="詳細描述..." oninput="syncText()"></textarea>
             <div class="btn-stack">
                 <button id="gen-2" class="btn btn-gen" onclick="generate(2)">🚀 產生高清報告圖</button>
                 <button id="dl-2" class="btn btn-dl" onclick="trigDL(2)">📥 下載</button>
@@ -159,24 +161,25 @@
         <div class="editor-section">
             <div class="editor-title">💖 CHAPTER 03：互動與驗收</div>
             <span class="field-label">🌟 今日主打星</span>
-            <div class="photo-box-edit ratio-43" style="width:100%; margin-bottom:10px;"><img src=""><input type="file" data-id="p25" onchange="pv(this, 'stg-p25')"></div>
+            <div class="photo-box-edit ratio-43" style="width:100%; margin-bottom:10px;"><img src=""><input type="file" data-id="p25" onchange="pv(this, 's3-h')"></div>
             <span class="field-label">📸 暖心互動紀錄</span>
             <div class="photo-grid-edit">
-                <div class="photo-box-edit"><span>📷1</span><img src=""><input type="file" data-id="p26" onchange="pv(this, 'stg-p26')"></div>
-                <div class="photo-box-edit"><span>📷2</span><img src=""><input type="file" data-id="p27" onchange="pv(this, 'stg-p26')"></div>
-                <div class="photo-box-edit"><span>📷3</span><img src=""><input type="file" data-id="p28" onchange="pv(this, 'stg-p26')"></div>
-                <div class="photo-box-edit"><span>📷4</span><img src=""><input type="file" data-id="p29" onchange="pv(this, 'stg-p26')"></div>
-                <div class="photo-box-edit"><span>📷5</span><img src=""><input type="file" data-id="p30" onchange="pv(this, 'stg-p26')"></div>
-                <div class="photo-box-edit"><span>📷6</span><img src=""><input type="file" data-id="p31" onchange="pv(this, 'stg-p26')"></div>
+                <div class="photo-box-edit"><span>📷1</span><img src=""><input type="file" data-id="p26" onchange="pv(this, 's3-b')"></div>
+                <div class="photo-box-edit"><span>📷2</span><img src=""><input type="file" data-id="p27" onchange="pv(this, 's3-b')"></div>
+                <div class="photo-box-edit"><span>📷3</span><img src=""><input type="file" data-id="p28" onchange="pv(this, 's3-b')"></div>
+                <div class="photo-box-edit"><span>📷4</span><img src=""><input type="file" data-id="p29" onchange="pv(this, 's3-b')"></div>
+                <div class="photo-box-edit"><span>📷5</span><img src=""><input type="file" data-id="p30" onchange="pv(this, 's3-b')"></div>
+                <div class="photo-box-edit"><span>📷6</span><img src=""><input type="file" data-id="p31" onchange="pv(this, 's3-b')"></div>
             </div>
-            <textarea id="i-b" rows="2" placeholder="填寫詳細描述..." oninput="syncText()"></textarea>
+            <textarea id="i-b" rows="2" placeholder="詳細描述..." oninput="syncText()"></textarea>
             <textarea id="i-t" rows="3" placeholder="💌 給毛爸媽的專業悄悄話..." oninput="syncText()" style="border: 2px solid var(--gold); margin-top:10px;"></textarea>
+            
             <span class="field-label">🛡️ 安全衛生驗收</span>
             <div class="photo-grid-edit" style="grid-template-columns: 1fr 1fr;">
-                <div class="photo-box-edit ratio-43"><span>驗收📷1</span><img src=""><input type="file" data-id="p32" onchange="pv(this, 'stg-p32')"></div>
-                <div class="photo-box-edit ratio-43"><span>驗收📷2</span><img src=""><input type="file" data-id="p33" onchange="pv(this, 'stg-p32')"></div>
-                <div class="photo-box-edit ratio-43"><span>驗收📷3</span><img src=""><input type="file" data-id="p34" onchange="pv(this, 'stg-p32')"></div>
-                <div class="photo-box-edit ratio-43"><span>驗收📷4</span><img src=""><input type="file" data-id="p35" onchange="pv(this, 'stg-p32')"></div>
+                <div class="photo-box-edit ratio-43"><span>驗收📷1</span><img src=""><input type="file" data-id="p32" onchange="pv(this, 's3-sa')"></div>
+                <div class="photo-box-edit ratio-43"><span>驗收📷2</span><img src=""><input type="file" data-id="p33" onchange="pv(this, 's3-sa')"></div>
+                <div class="photo-box-edit ratio-43"><span>驗收📷3</span><img src=""><input type="file" data-id="p34" onchange="pv(this, 's3-sa')"></div>
+                <div class="photo-box-edit ratio-43"><span>驗收📷4</span><img src=""><input type="file" data-id="p35" onchange="pv(this, 's3-sa')"></div>
             </div>
             <div class="tag-container" style="margin-top:10px;">
                 <div class="tag-btn" onclick="tg(this)">✅清潔完成</div><div class="tag-btn" onclick="tg(this)">✅零食玩具歸位</div><div class="tag-btn" onclick="tg(this)">✅電器安全巡查</div><div class="tag-btn" onclick="tg(this)">✅門窗鎖閉確認</div>
@@ -209,15 +212,15 @@
         <div class="export-page" id="page-3">
             <div class="header-final"><h1>嘉義寵物保姆 ㄌㄌ ∥ 到府服務日誌</h1><div class="chapter-tag">Chapter 03. Interaction & Safety</div></div>
             <div class="info-bar-final"><span class="h-sync"></span><span class="h-date"></span></div>
-            <div class="report-section-final"><div class="report-title-final">📸 今日暖心互動</div><div id="stg-p25" class="photo-box-final ratio-43" style="width:100%; margin-bottom:15px; display:block;"></div><div class="photo-grid-final" id="stg-p26"></div><div class="text-content-final" id="stg-b"></div></div>
+            <div class="report-section-final"><div class="report-title-final">📸 今日暖心互動</div><div id="stg-p25" class="photo-box-final ratio-43" style="width:100%; margin-bottom:15px;"></div><div class="photo-grid-final" id="stg-p26"></div><div class="text-content-final" id="stg-b"></div></div>
             <div class="report-section-final" style="background:#FFF9F5;"><div class="report-title-final">💌 ㄌㄌ 的專業悄悄話</div><div class="text-content-final" id="stg-t"></div><img src="cat_tortie.png" class="cat-deco" style="width:130px;"></div>
-            <div class="report-section-final"><div class="report-title-final">🛡️ 安全衛生驗收</div><div class="photo-grid-final" id="stg-p32" style="grid-template-columns: 1fr 1fr;"></div><div id="stg-tags"></div><div class="text-content-final" id="stg-sa"></div></div>
+            <div class="report-section-final"><div class="report-title-final">🛡️ 安全衛生驗收</div><div class="photo-grid-final" id="stg-p32" style="grid-template-columns: 1fr 1fr;"></div><div id="stg-tags"></div><div class="text-content-final" id="stg-sa-txt"></div></div>
             <div class="footer-final"><div class="slogan-final">「生活雖然匆忙，但我會一直在這，陪孩子享受愜意的日常。」</div><div class="ig-area-final">歡迎追蹤ㄌㄌ，因為妳家小寶貝可能會上鏡頭喔！<br><img src="ig.png"></div></div>
         </div>
     </div>
 
 <script>
-    const dbName = "LiliVault_V6_8";
+    const dbName = "LiliVault_V6_7";
     let db, pageBlobs = {};
     const req = indexedDB.open(dbName, 1);
     req.onupgradeneeded = e => e.target.result.createObjectStore("photos");
@@ -244,4 +247,78 @@
         const staff = document.getElementById('i-s').value;
         const now = new Date();
         const time = `${now.getFullYear()}/${now.getMonth()+1}/${now.getDate()} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
-      
+        document.querySelectorAll('.h-sync').forEach(el => el.innerText = `今日到誰家：${pet} / 負責：${staff}`);
+        document.querySelectorAll('.h-date').forEach(el => el.innerText = `日期：${time}`);
+        document.getElementById('stg-f').innerText = document.getElementById('i-f').value;
+        document.getElementById('stg-w').innerText = document.getElementById('i-w').value;
+        document.getElementById('stg-p').innerText = document.getElementById('i-p').value;
+        document.getElementById('stg-m').innerText = document.getElementById('i-m').value;
+        document.getElementById('stg-b').innerText = document.getElementById('i-b').value;
+        document.getElementById('stg-t').innerText = document.getElementById('i-t').value;
+        document.getElementById('stg-sa-txt').innerText = document.getElementById('i-sa').value;
+        const tagBox = document.getElementById('stg-tags'); tagBox.innerHTML = "";
+        document.querySelectorAll('.tag-btn.active').forEach(t => { tagBox.innerHTML += `<span class="tag-badge">${t.innerText}</span>`; });
+        const fds = ['i-h', 'i-f', 'i-w', 'i-p', 'i-m', 'i-b', 'i-t', 'i-sa', 'i-s'];
+        fds.forEach(id => localStorage.setItem(id, document.getElementById(id).value));
+    }
+
+    function tg(b) { b.classList.toggle('active'); localStorage.setItem('tags', JSON.stringify(Array.from(document.querySelectorAll('.tag-btn.active')).map(x => x.innerText))); syncText(); }
+    
+    function pv(i, stgId) { 
+        if (i.files[0]) { 
+            const r = new FileReader(); 
+            r.onload = e => updateStageImg(stgId, i.getAttribute('data-id'), e.target.result, i); 
+            r.readAsDataURL(i.files[0]); 
+        } 
+    }
+
+    function updateStageImg(stgId, pid, b64, inputEl) {
+        const parent = inputEl.parentElement;
+        parent.querySelector('img').src = b64;
+        // 核心修正：隱藏占位文字標籤
+        parent.querySelector('span').style.display = 'none';
+        savePhotoDB(pid, b64);
+        
+        const stage = document.getElementById(stgId);
+        if (pid === 'p25') { stage.innerHTML = `<img src="${b64}">`; return; }
+        let target = stage.querySelector(`[data-stg="${pid}"]`);
+        if (!target) { 
+            target = document.createElement('div'); 
+            target.className = (stgId === 's3-sa') ? "photo-box-final ratio-43" : "photo-box-final"; 
+            target.setAttribute('data-stg', pid); 
+            stage.appendChild(target); 
+        }
+        target.innerHTML = `<img src="${b64}">`;
+    }
+
+    function rs() { if (confirm('徹底抹除暫存？')) { localStorage.clear(); db.transaction("photos", "readwrite").objectStore("photos").clear().onsuccess = () => location.reload(); } }
+
+    async function generate(num) {
+        const btn = document.getElementById(`gen-${num}`);
+        const dlBtn = document.getElementById(`dl-${num}`);
+        btn.innerText = "⚡ 壓製中...";
+        dlBtn.classList.remove('active');
+        syncText();
+
+        const target = document.getElementById(`page-${num}`);
+        const parent = target.parentElement;
+        parent.style.opacity = "1";
+
+        setTimeout(() => {
+            html2canvas(target, { useCORS: true, scale: 2.2, backgroundColor: "#FFFDF9", logging: false }).then(canvas => {
+                canvas.toBlob(blob => {
+                    const petName = document.getElementById('i-h').value || "未命名";
+                    const pgNames = ["01飲食補水", "02健康監測", "03互動驗收"];
+                    pageBlobs[num] = { blob, name: `[ㄌㄌ照護]_${petName}_${pgNames[num-1]}.jpg` };
+                    btn.innerText = "✅ 成功";
+                    dlBtn.classList.add('active');
+                    parent.style.opacity = "0";
+                    alert(`✅ 第 0${num} 頁壓製完畢！`);
+                }, 'image/jpeg', 0.85);
+            }).catch(e => { btn.innerText = "❌ 失敗"; parent.style.opacity = "0"; });
+        }, 500);
+    }
+    function trigDL(n) { if (pageBlobs[n]) { const a = document.createElement('a'); a.href = URL.createObjectURL(pageBlobs[n].blob); a.download = pageBlobs[n].name; a.click(); } }
+</script>
+</body>
+</html>
