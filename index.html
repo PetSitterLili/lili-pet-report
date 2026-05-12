@@ -12,6 +12,7 @@
         :root {
             --m-purple: #5A4E70; --m-purple-light: #9B92B0; --m-bg: #F4F0F7;
             --cream: #FFFDF9; --gold: #A68D5F; --text-serif: #2E2A33;
+            --milk-tea-gradient: linear-gradient(135deg, #F2E9E1 0%, #FFFFFF 100%);
         }
         body { background-color: var(--m-bg); font-family: 'Noto Serif TC', serif; color: var(--text-serif); margin: 0; padding: 15px; display: flex; flex-direction: column; align-items: center; }
         .ui-header { text-align: center; margin-bottom: 25px; padding: 10px 0; width: 100%; max-width: 500px; border-bottom: 1px solid var(--m-purple-light); }
@@ -41,6 +42,7 @@
         .info-bar-final { display: flex; justify-content: space-between; margin-bottom: 25px; font-size: 18px; color: var(--m-purple); border-bottom: 1px dashed #E0D7EA; padding-bottom: 8px; }
         .report-grid-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 20px; }
         .col-section { background: white; border-radius: 25px; padding: 25px; border: 1px solid rgba(109,91,142,0.06); position: relative; display: flex; flex-direction: column; }
+        .whisper-box { background: var(--milk-tea-gradient); border-radius: 20px; padding: 20px; margin-bottom: 15px; }
         .report-title-final { font-weight: 700; font-size: 21px; color: var(--m-purple); margin-bottom: 16px; display: flex; align-items: center; }
         .report-title-final::before { content: ""; width: 6px; height: 24px; background: var(--gold); margin-right: 12px; border-radius: 3px; }
         .photo-grid-final { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 15px; }
@@ -141,7 +143,7 @@
                 <div class="photo-box-edit"><span>📷6</span><img src=""><input type="file" data-id="p31" onchange="pv(this, 'stg-p26')"></div>
             </div>
             <textarea id="i-b" rows="2" placeholder="詳細描述..." oninput="syncText()"></textarea>
-            <textarea id="i-t" rows="3" placeholder="💌 給毛爸媽的專業悄悄話..." oninput="syncText()" style="border: 2px solid var(--gold); margin-top:10px;"></textarea>
+            <textarea id="i-t" rows="3" placeholder="💌 ㄌㄌ 想對毛爸媽說的悄悄話..." oninput="syncText()" style="border: 2px solid var(--gold); margin-top:10px;"></textarea>
             <span class="field-label">🛡️ 安全衛生驗收</span>
             <div class="photo-grid-edit" style="grid-template-columns: 1fr 1fr;">
                 <div class="photo-box-edit ratio-43"><span>驗收📷1</span><img src=""><input type="file" data-id="p32" onchange="pv(this, 'stg-p32')"></div>
@@ -185,7 +187,17 @@
             <div id="stg-p25" class="photo-box-final ratio-43" style="width:100%; margin-bottom:20px;"></div>
             <div class="report-grid-2col">
                 <div class="col-section"><div class="report-title-final">📸 暖心互動紀錄</div><div class="photo-grid-final" id="stg-p26"></div><div class="text-content-final" id="stg-b"></div></div>
-                <div class="col-section" style="background: linear-gradient(135deg, #F2E9E1 0%, #FFFFFF 100%);"><div class="report-title-final">💌 ㄌㄌ 想對毛爸媽說的悄悄話</div><div class="text-content-final" id="stg-t"></div><div id="stg-tags" style="margin-top:10px;"></div><div class="text-content-final" id="stg-sa" style="font-size:16px; border-top:1px dashed #DDD; padding-top:10px; color:var(--gold);"></div><img src="cat_tortie.png" class="cat-deco" style="width:130px;"></div>
+                <div class="col-section">
+                    <div class="whisper-box">
+                        <div class="report-title-final">💌 ㄌㄌ 想對毛爸媽說的悄悄話</div>
+                        <div class="text-content-final" id="stg-t" style="padding-bottom: 20px;"></div>
+                    </div>
+                    <div class="report-title-final">🛡️ 安全衛生驗收</div>
+                    <div class="photo-grid-final" id="stg-p32"></div>
+                    <div id="stg-tags" style="margin-top:10px;"></div>
+                    <div class="text-content-final" id="stg-sa" style="font-size:16px; border-top:1px dashed #DDD; padding-top:10px; color:var(--gold);"></div>
+                    <img src="cat_tortie.png" class="cat-deco" style="width:130px;">
+                </div>
             </div>
             <div class="footer-final"><div class="slogan-final">「生活雖然匆忙，但我會一直在這，陪孩子享受愜意的日常。」</div><div class="ig-area-final">歡迎追蹤ㄌㄌ，因為你家小寶貝可能會上鏡頭喔！<br><img src="ig.png"></div></div>
         </div>
