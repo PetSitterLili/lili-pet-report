@@ -1,297 +1,337 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-    <link rel="manifest" href="manifest.json">
-    <link rel="apple-touch-icon" href="denicon.png">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <meta name="robots" content="noindex, nofollow">
-    <title>ㄌㄌ 專業照護報告 V4.1</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="denicon.png">
+    <title>ㄌㄌ 照護日誌 V6.0</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700&family=Cormorant+Garamond:ital,wght@1,600&display=swap" rel="stylesheet">
     <style>
-        :root { --primary: #6D5B8E; --soft-purple: #B1A2C6; --bg: #F4F0F7; --clay: #ffffff; --text: #3C3642; --accent: #FF823A; }
-        body { background-color: var(--bg); font-family: 'Noto Sans TC', sans-serif; color: var(--text); margin: 0; padding: 10px; display: flex; flex-direction: column; align-items: center; }
-        #report-export-area { width: 100%; max-width: 500px; background: var(--clay); border-radius: 30px; padding: 25px 15px; box-sizing: border-box; position: relative; }
-        .grid-master { display: flex; flex-direction: column; gap: 10px; }
-        h1 { color: var(--primary); text-align: center; margin: 0; font-size: 19px; font-weight: 700; }
-        .subtitle { text-align: center; color: var(--soft-purple); font-size: 12px; margin-bottom: 25px; }
-        .section { margin-bottom: 20px; padding: 18px; border-radius: 25px; background: var(--bg); border: 1px solid rgba(255,255,255,0.6); position: relative; overflow: hidden; }
-        .section-title { font-weight: 700; color: var(--primary); margin-bottom: 15px; font-size: 16px; display: flex; align-items: center; }
-        .section-title::before { content: ""; width: 4px; height: 16px; background: var(--primary); margin-right: 8px; border-radius: 2px; }
-        .sub-label { font-size: 14px; font-weight: 700; color: var(--primary); margin: 15px 0 8px; display: block; }
-        textarea, select { width: 100%; padding: 12px; border-radius: 15px; border: 1.5px solid #E0D7EA; background: white; margin-bottom: 8px; box-sizing: border-box; font-size: 14px; resize: none; line-height: 1.6; font-family: inherit; }
-        .photo-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-bottom: 8px; }
-        .photo-box { position: relative; width: 100%; aspect-ratio: 3 / 4; border-radius: 18px; background: #fff; border: 2px dashed #D1C4E9; overflow: hidden; display: flex; align-items: center; justify-content: center; }
-        .photo-box img { width: 100% !important; height: 100% !important; object-fit: cover !important; position: absolute; top: 0; left: 0; }
-        .photo-box input { position: absolute; opacity: 0; width: 100%; height: 100%; cursor: pointer; z-index: 10; }
-        .photo-box span { font-size: 11px; color: var(--soft-purple); text-align: center; }
-        .guardian-wrapper { position: relative; width: 100%; }
-        .guardian-cat { display: none; position: absolute; right: -10px; bottom: -5px; width: 130px; height: auto !important; z-index: 10; pointer-events: none; }
-        .preview-mode .guardian-cat { display: block !important; }
-        .tag-container { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0; }
-        .tag-btn { background: #fff; border: 1.5px solid var(--soft-purple); color: var(--soft-purple); padding: 8px 14px; border-radius: 20px; font-size: 13px; cursor: pointer; }
-        .tag-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); }
-        #r-sa-tags { display: none; margin-top: 10px; }
-        .preview-mode #r-sa-tags { display: flex !important; flex-wrap: wrap; gap: 8px; }
-        .preview-mode .active-tag-render { font-size: 16px; font-weight: 700; color: var(--primary); margin-right: 15px; }
-        .preview-mode #report-export-area { width: 1000px !important; max-width: 1000px !important; padding: 50px !important; }
-        .preview-mode .grid-master { display: grid !important; grid-template-columns: 1fr 1fr !important; gap: 30px !important; }
-        .preview-mode h1 { font-size: 36px !important; margin-bottom: 10px !important; }
-        .preview-mode textarea { display: none !important; }
-        .text-render { display: none; white-space: pre-wrap; font-size: 17px; line-height: 1.8; color: var(--text); padding: 5px 0; }
-        .preview-mode .text-render { display: block !important; padding-right: 110px; min-height: 80px; } 
-        .preview-mode .photo-box:not(:has(img[style*="display: block"])) { display: none !important; }
-        .preview-mode .edit-only { display: none !important; } 
-        #r-s { font-weight: 700; color: var(--soft-purple); display: none; }
-        .preview-mode #r-s { display: block !important; font-size: 18px !important; margin-bottom: 10px; }
-        #result-container { display: none; width: 100%; max-width: 1000px; margin-top: 30px; text-align: center; border-top: 3px solid var(--primary); padding-top: 25px; }
-        #final-img { width: 100%; border-radius: 15px; box-shadow: 0 20px 60px rgba(0,0,0,0.2); border: 2px solid white; margin-bottom: 20px;}
-        .controls { width: 100%; max-width: 500px; margin-top: 20px; padding-bottom: 80px; display: flex; flex-direction: column; gap: 10px; }
-        .btn { border: none; padding: 18px; border-radius: 50px; font-weight: 700; cursor: pointer; font-size: 16px; }
-        .btn-main { background: var(--primary); color: white; width: 100%; }
-        .btn-download { background: #4CAF50; color: white; margin-top: 10px; box-shadow: 0 5px 15px rgba(76,175,80,0.3); }
-        .btn-reset { background: #888; color: white; margin-top: 20px; }
+        @font-face {
+            font-family: 'jf-openhuninn';
+            src: url('https://fastly.jsdelivr.net/gh/justfont/open-huninn-font@1.0/font/jf-openhuninn-1.0.ttf');
+        }
+
+        :root {
+            --m-purple: #6D5B8E; --m-purple-light: #B1A2C6; --m-bg: #F4F0F7;
+            --cream: #FFFDF9; --gold: #A68D5F; --text-dark: #3C3642;
+        }
+
+        body { background-color: var(--m-bg); margin: 0; padding: 20px 0; display: flex; flex-direction: column; align-items: center; }
+
+        /* --- 頁面容器 --- */
+        .page-wrapper { width: 1000px; position: relative; margin-bottom: 60px; }
+        
+        /* 側邊下載控制台 (不會被截圖) */
+        .side-control { 
+            position: absolute; left: 1010px; top: 0; width: 150px; 
+            display: flex; flex-direction: column; gap: 10px; 
+        }
+        @media (max-width: 1200px) { /* 手機版按鈕移到下方 */
+            .side-control { position: static; width: 90%; margin: 10px auto 40px; }
+        }
+
+        /* --- A4 實體紙張視覺 --- */
+        .a4-canvas { 
+            width: 1000px; background: var(--cream); padding: 60px; box-sizing: border-box; 
+            display: flex; flex-direction: column; box-shadow: 0 10px 40px rgba(0,0,0,0.1); 
+            border-radius: 5px; position: relative;
+        }
+
+        /* 統一文字輸入樣式 (透明底、直接作業) */
+        textarea, input[type="text"], select {
+            width: 100%; background: transparent; border: none; border-bottom: 1px dashed #DDD;
+            font-family: 'Noto Serif TC', serif; font-size: 22px; color: #222;
+            padding: 5px 0; margin-bottom: 5px; resize: none; outline: none;
+        }
+        textarea::placeholder { color: #CCC; font-family: 'jf-openhuninn'; font-size: 16px; }
+
+        /* 視覺元件 */
+        .header { text-align: center; border-bottom: 2px solid var(--gold); padding-bottom: 20px; margin-bottom: 40px; }
+        .header h1 { margin: 0; color: var(--m-purple); font-size: 38px; font-family: 'jf-openhuninn'; font-weight: 700; }
+        .chapter-tag { font-family: 'Cormorant Garamond', serif; font-style: italic; color: var(--gold); font-size: 34px; margin-top: 5px; }
+
+        .info-bar { display: flex; justify-content: space-between; margin-bottom: 30px; font-family: 'Noto Serif TC', serif; font-size: 22px; color: var(--m-purple); }
+
+        .section { background: white; border-radius: 25px; padding: 35px; margin-bottom: 30px; position: relative; border: 1px solid rgba(109,91,142,0.1); }
+        .section-title { font-family: 'jf-openhuninn'; font-size: 28px; color: var(--m-purple); margin-bottom: 20px; display: flex; align-items: center; }
+        .section-title::before { content: ""; width: 8px; height: 32px; background: var(--gold); margin-right: 15px; border-radius: 4px; }
+
+        /* 照片網格 (所見即所得) */
+        .photo-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-bottom: 20px; }
+        .photo-box { 
+            position: relative; aspect-ratio: 3 / 4; border-radius: 20px; background: #F5F5F5; 
+            border: 1.5px dashed var(--m-purple-light); display: flex; align-items: center; justify-content: center; overflow: hidden; 
+        }
+        .photo-box.ratio-43 { aspect-ratio: 4 / 3; }
+        .photo-box img { width: 100%; height: 100%; object-fit: cover; }
+        .photo-box input { position: absolute; opacity: 0; width: 100%; height: 100%; cursor: pointer; z-index: 5; }
+        .photo-box span { font-family: 'jf-openhuninn'; font-size: 14px; color: var(--m-purple-light); text-align: center; padding: 10px; }
+
+        /* 守護貓咪 */
+        .cat-deco { position: absolute; right: 30px; bottom: 25px; width: 160px; height: auto; pointer-events: none; }
+
+        /* 頁尾 */
+        .footer { margin-top: auto; padding-top: 40px; border-top: 2px solid var(--m-bg); display: flex; justify-content: space-between; align-items: flex-end; }
+        .slogan { font-family: 'jf-openhuninn'; font-size: 22px; color: var(--m-purple-light); max-width: 650px; line-height: 1.5; }
+        .ig-area { text-align: right; font-family: 'jf-openhuninn'; font-size: 16px; color: var(--m-purple); }
+        .ig-area img { width: 140px; margin-top: 10px; }
+
+        /* 按鈕 */
+        .btn { border: none; padding: 15px; border-radius: 50px; font-weight: 700; cursor: pointer; font-family: 'jf-openhuninn'; transition: 0.3s; }
+        .btn-save { background: var(--m-purple); color: white; box-shadow: 0 4px 15px rgba(109,91,142,0.3); }
+        .btn-reset { background: #999; color: white; width: 200px; margin: 40px 0; }
+
+        /* 標籤 */
+        .tag-btn { background: #F0F0F0; border: 1px solid #DDD; padding: 8px 15px; border-radius: 20px; font-size: 14px; cursor: pointer; margin: 3px; display: inline-block; font-family: 'jf-openhuninn'; }
+        .tag-btn.active { background: var(--m-purple); color: white; border-color: var(--m-purple); }
+
+        /* 截圖時隱藏虛線與按鈕 */
+        .rendering .side-control, .rendering .tag-btn, .rendering span, .rendering input { display: none !important; }
+        .rendering textarea, .rendering input[type="text"] { border-bottom: none !important; }
+        .rendering .photo-box:not(:has(img[src^="data"])) { display: none !important; } /* 未上傳的照片格隱藏 */
     </style>
 </head>
 <body>
 
-<div id="report-export-area">
-    <h1>嘉義寵物保姆 ㄌㄌ ∥ 到府服務日誌</h1>
-    <div class="subtitle">慢步調陪伴守護｜細緻監測照顧</div>
-    <div class="grid-master">
-        <div class="column">
-            <div class="section">
-                <div class="section-title">📍 今日到誰家？</div>
-                <textarea rows="1" placeholder="填寫毛孩名稱" id="i-h" oninput="as()"></textarea>
-                <div class="text-render" id="r-h"></div>
-                <div class="edit-only"><select id="i-s" onchange="as()"><option value="負責保姆：ㄌㄌ">負責保姆：ㄌㄌ</option><option value="負責保姆：Tiffany">負責保姆：Tiffany</option><option value="負責保姆：ㄌㄌ & Tiffany">負責保姆：ㄌㄌ & Tiffany</option></select></div>
-                <div id="r-s"></div>
-                <div id="v-t" style="font-size: 12px; color: var(--soft-purple); margin-top: 5px; border-top: 1px solid #eee; padding-top: 5px;"></div>
-            </div>
-            <div class="section">
-                <div class="section-title">🔍 生理監測</div>
-                <span class="sub-label">🍴 進食狀況</span>
-                <div class="photo-grid">
-                    <div class="photo-box"><span>📷 拍照</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" data-id="p1" onchange="pv(this)"></div>
-                    <div class="photo-box"><span>側拍 1</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" data-id="p2" onchange="pv(this)"></div>
-                    <div class="photo-box"><span>側拍 2</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" data-id="p3" onchange="pv(this)"></div>
-                    <div class="photo-box"><span>側拍 3</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" data-id="p4" onchange="pv(this)"></div>
-                    <div class="photo-box"><span>側拍 4</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" data-id="p5" onchange="pv(this)"></div>
-                    <div class="photo-box"><span>側拍 5</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" data-id="p6" onchange="pv(this)"></div>
-                </div>
-                <div class="guardian-wrapper"><textarea rows="2" placeholder="紀錄進食細節..." id="i-f" oninput="as()"></textarea><div class="text-render" id="r-f"></div><img src="cat_black.png" class="guardian-cat" alt="Black Cat"></div>
-                <span class="sub-label">💧 飲水觀察</span>
-                <div class="photo-grid">
-                    <div class="photo-box"><span>📷 拍照</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" data-id="p7" onchange="pv(this)"></div>
-                    <div class="photo-box"><span>側拍 1</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" data-id="p8" onchange="pv(this)"></div>
-                    <div class="photo-box"><span>側拍 2</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" data-id="p9" onchange="pv(this)"></div>
-                    <div class="photo-box"><span>側拍 3</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" data-id="p10" onchange="pv(this)"></div>
-                    <div class="photo-box"><span>側拍 4</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" data-id="p11" onchange="pv(this)"></div>
-                    <div class="photo-box"><span>側拍 5</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" data-id="p12" onchange="pv(this)"></div>
-                </div>
-                <div class="guardian-wrapper"><textarea rows="2" placeholder="紀錄飲水觀察..." id="i-w" oninput="as()"></textarea><div class="text-render" id="r-w"></div><img src="cat_striped.png" class="guardian-cat" alt="Striped Cat"></div>
-                <span class="sub-label">💩 排泄觀察</span>
-                <div class="photo-grid">
-                    <div class="photo-box"><span>📷 拍照</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" data-id="p13" onchange="pv(this)"></div>
-                    <div class="photo-box"><span>側拍 1</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" data-id="p14" onchange="pv(this)"></div>
-                    <div class="photo-box"><span>側拍 2</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" data-id="p15" onchange="pv(this)"></div>
-                    <div class="photo-box"><span>側拍 3</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" data-id="p16" onchange="pv(this)"></div>
-                    <div class="photo-box"><span>側拍 4</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" data-id="p17" onchange="pv(this)"></div>
-                    <div class="photo-box"><span>側拍 5</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" data-id="p18" onchange="pv(this)"></div>
-                </div>
-                <div class="guardian-wrapper"><textarea rows="2" placeholder="紀錄便溺觀察..." id="i-p" oninput="as()"></textarea><div class="text-render" id="r-p"></div><img src="cat_orange.png" class="guardian-cat" alt="Orange Cat"></div>
-                <span class="sub-label">💊 醫囑 / 保養品執行</span>
-                <div class="photo-grid">
-                    <div class="photo-box"><span>📷 拍照</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" data-id="p19" onchange="pv(this)"></div>
-                    <div class="photo-box"><span>側拍 1</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" data-id="p20" onchange="pv(this)"></div>
-                    <div class="photo-box"><span>側拍 2</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" data-id="p21" onchange="pv(this)"></div>
-                    <div class="photo-box"><span>側拍 3</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" onchange="pv(this)"></div>
-                    <div class="photo-box"><span>側拍 4</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" data-id="p22" onchange="pv(this)"></div>
-                    <div class="photo-box"><span>側拍 5</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" data-id="p23" onchange="pv(this)"></div>
-                </div>
-                <textarea rows="2" placeholder="紀錄醫囑執行狀況..." id="i-m" oninput="as()"></textarea><div class="text-render" id="r-m"></div>
-            </div>
+    <div class="header-ui hunround" style="text-align:center; margin-bottom:20px;">
+        <h2 style="color:var(--m-purple);">ㄌㄌ 旗艦作業台 V6.0</h2>
+        <p style="font-size:12px; color:var(--m-purple-light);">直接在下方報告內填寫，完成後按右側按鈕儲存</p>
+    </div>
+
+    <div class="page-wrapper" id="wrap-1">
+        <div class="side-control">
+            <button class="btn btn-save" onclick="savePage(1)">📸 儲存第一頁</button>
+            <p style="font-size:11px; color:#888;">(飲食與補水)</p>
         </div>
-        <div class="column">
-            <div class="section">
-                <div class="section-title">📸 今日互動小側拍💓</div>
-                <div class="photo-grid" style="grid-template-columns: 1fr;"><div class="photo-box" style="aspect-ratio: 4 / 3 !important;"><span>🌟 今日主打照片</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" data-id="p24" onchange="pv(this)"></div></div>
-                <div class="photo-grid" style="margin-top:8px;">
-                    <div class="photo-box"><span>側拍 1</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" data-id="p25" onchange="pv(this)"></div>
-                    <div class="photo-box"><span>側拍 2</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" data-id="p26" onchange="pv(this)"></div>
-                    <div class="photo-box"><span>側拍 3</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" data-id="p27" onchange="pv(this)"></div>
-                    <div class="photo-box"><span>側拍 4</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" data-id="p28" onchange="pv(this)"></div>
-                    <div class="photo-box"><span>側拍 5</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" data-id="p29" onchange="pv(this)"></div>
-                    <div class="photo-box"><span>側拍 6</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" data-id="p30" onchange="pv(this)"></div>
-                </div>
-                <textarea rows="3" style="margin-top:10px;" placeholder="描述今日細節..." id="i-b" oninput="as()"></textarea><div class="text-render" id="r-b"></div>
+        <div class="a4-canvas" id="canvas-1">
+            <div class="header">
+                <h1>嘉義寵物保姆 ㄌㄌ ∥ 到府服務日誌</h1>
+                <div class="chapter-tag">Chapter 01. Nutrition & Hydration</div>
             </div>
-            <div class="section" style="background: #FFF5EE;">
-                <div class="section-title" style="color: var(--accent);">💌 ㄌㄌ 想與你分享的悄悄話</div>
-                <div class="guardian-wrapper"><textarea rows="3" placeholder="溫馨提醒與專業建議..." id="i-t" oninput="as()"></textarea><div class="text-render" id="r-t"></div><img src="cat_tortie.png" class="guardian-cat" alt="Tortie Cat" style="width: 110px;"></div>
+            <div class="info-bar">
+                <span>今日到誰家：<input type="text" id="i-h" style="width:200px;" placeholder="輸入毛孩名" oninput="syncAll()"></span>
+                <span>保姆：<select id="i-s" style="width:150px;" onchange="syncAll()"><option value="ㄌㄌ">ㄌㄌ</option><option value="Tiffany">Tiffany</option></select></span>
+                <span id="date-1">日期：2026/05/12</span>
             </div>
             <div class="section">
-                <div class="section-title">🛡️ 全景安全衛生驗收</div>
+                <div class="section-title">🍴 進食詳細紀錄</div>
                 <div class="photo-grid">
-                    <div class="photo-box"><span>驗收 1</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" data-id="p31" onchange="pv(this)"></div>
-                    <div class="photo-box"><span>驗收 2</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" data-id="p32" onchange="pv(this)"></div>
-                    <div class="photo-box"><span>驗收 3</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" data-id="p33" onchange="pv(this)"></div>
-                    <div class="photo-box"><span>驗收 4</span><img src="" style="display:none;"><input type="file" accept="image/*" capture="camera" data-id="p34" onchange="pv(this)"></div>
+                    <div class="photo-box"><span>📷點擊拍照</span><img src=""><input type="file" data-id="p1" onchange="pv(this)"></div>
+                    <div class="photo-box"><span>📷點擊拍照</span><img src=""><input type="file" data-id="p2" onchange="pv(this)"></div>
+                    <div class="photo-box"><span>📷點擊拍照</span><img src=""><input type="file" data-id="p3" onchange="pv(this)"></div>
+                    <div class="photo-box"><span>📷點擊拍照</span><img src=""><input type="file" data-id="p4" onchange="pv(this)"></div>
+                    <div class="photo-box"><span>📷點擊拍照</span><img src=""><input type="file" data-id="p5" onchange="pv(this)"></div>
+                    <div class="photo-box"><span>📷點擊拍照</span><img src=""><input type="file" data-id="p6" onchange="pv(this)"></div>
                 </div>
-                <div class="tag-container edit-only">
-                    <div class="tag-btn" onclick="tg(this)">✅清潔完成</div><div class="tag-btn" onclick="tg(this)">✅零食玩具歸位</div><div class="tag-btn" onclick="tg(this)">✅電器安全巡查</div><div class="tag-btn" onclick="tg(this)">✅門窗鎖閉確認</div>
+                <textarea rows="3" id="i-f" placeholder="紀錄進食細節..." oninput="as()"></textarea>
+                <img src="cat_black.png" class="cat-deco">
+            </div>
+            <div class="section">
+                <div class="section-title">💧 補水與觀察</div>
+                <div class="photo-grid">
+                    <div class="photo-box"><span>📷點擊拍照</span><img src=""><input type="file" data-id="p7" onchange="pv(this)"></div>
+                    <div class="photo-box"><span>📷點擊拍照</span><img src=""><input type="file" data-id="p8" onchange="pv(this)"></div>
+                    <div class="photo-box"><span>📷點擊拍照</span><img src=""><input type="file" data-id="p9" onchange="pv(this)"></div>
+                    <div class="photo-box"><span>📷點擊拍照</span><img src=""><input type="file" data-id="p10" onchange="pv(this)"></div>
+                    <div class="photo-box"><span>📷點擊拍照</span><img src=""><input type="file" data-id="p11" onchange="pv(this)"></div>
+                    <div class="photo-box"><span>📷點擊拍照</span><img src=""><input type="file" data-id="p12" onchange="pv(this)"></div>
                 </div>
-                <div id="r-sa-tags"></div>
-                <textarea rows="2" placeholder="環境細節補充..." id="i-sa" oninput="as()"></textarea><div class="text-render" id="r-sa"></div>
+                <textarea rows="3" id="i-w" placeholder="紀錄飲水情況..." oninput="as()"></textarea>
+                <img src="cat_striped.png" class="cat-deco">
+            </div>
+            <div class="footer">
+                <div class="slogan">「慢步調陪伴，讓孩子在咀嚼與吞嚥間感受最溫柔的守護。」</div>
+                <div class="ig-area">歡迎追蹤ㄌㄌ，妳家小寶貝可能會上鏡頭喔！<br><img src="ig.png"></div>
             </div>
         </div>
     </div>
-    <p style="text-align:center; font-size:10px; color:var(--soft-purple); margin-top: 25px;">- Your Pets, My Priority -</p>
-</div>
 
-<div class="controls edit-only">
-    <button id="gen-btn" class="btn btn-main" onclick="generateReport()">🚀 生成高清報告 (V4.1 瘦身不失真版)</button>
+    <div class="page-wrapper" id="wrap-2">
+        <div class="side-control">
+            <button class="btn btn-save" onclick="savePage(2)">📸 儲存第二頁</button>
+            <p style="font-size:11px; color:#888;">(生理與醫囑)</p>
+        </div>
+        <div class="a4-canvas" id="canvas-2">
+            <div class="header">
+                <h1>嘉義寵物保姆 ㄌㄌ ∥ 到府服務日誌</h1>
+                <div class="chapter-tag">Chapter 02. Health & Medical Care</div>
+            </div>
+            <div class="info-bar">
+                <span class="sync-pet">今日到誰家：阿仔</span>
+                <span class="sync-staff">保姆：ㄌㄌ</span>
+                <span id="date-2">日期：</span>
+            </div>
+            <div class="section">
+                <div class="section-title">💩 排泄狀況監測</div>
+                <div class="photo-grid">
+                    <div class="photo-box"><span>📷點擊拍照</span><img src=""><input type="file" data-id="p13" onchange="pv(this)"></div>
+                    <div class="photo-box"><span>📷點擊拍照</span><img src=""><input type="file" data-id="p14" onchange="pv(this)"></div>
+                    <div class="photo-box"><span>📷點擊拍照</span><img src=""><input type="file" data-id="p15" onchange="pv(this)"></div>
+                    <div class="photo-box"><span>📷點擊拍照</span><img src=""><input type="file" data-id="p16" onchange="pv(this)"></div>
+                    <div class="photo-box"><span>📷點擊拍照</span><img src=""><input type="file" data-id="p17" onchange="pv(this)"></div>
+                    <div class="photo-box"><span>📷點擊拍照</span><img src=""><input type="file" data-id="p18" onchange="pv(this)"></div>
+                </div>
+                <textarea rows="3" id="i-p" placeholder="紀錄便溺觀察..." oninput="as()"></textarea>
+                <img src="cat_orange.png" class="cat-deco">
+            </div>
+            <div class="section">
+                <div class="section-title">💊 醫囑與保養品執行</div>
+                <div class="photo-grid">
+                    <div class="photo-box"><span>📷點擊拍照</span><img src=""><input type="file" data-id="p19" onchange="pv(this)"></div>
+                    <div class="photo-box"><span>📷點擊拍照</span><img src=""><input type="file" data-id="p20" onchange="pv(this)"></div>
+                    <div class="photo-box"><span>📷點擊拍照</span><img src=""><input type="file" data-id="p21" onchange="pv(this)"></div>
+                    <div class="photo-box"><span>📷點擊拍照</span><img src=""><input type="file" data-id="p22" onchange="pv(this)"></div>
+                    <div class="photo-box"><span>📷點擊拍照</span><img src=""><input type="file" data-id="p23" onchange="pv(this)"></div>
+                    <div class="photo-box"><span>📷點擊拍照</span><img src=""><input type="file" data-id="p24" onchange="pv(this)"></div>
+                </div>
+                <textarea rows="3" id="i-m" placeholder="紀錄醫療照護執行..." oninput="as()"></textarea>
+            </div>
+            <div class="footer">
+                <div class="slogan">「細膩的監測，是為了陪孩子走更長、更遠、更穩的路。」</div>
+                <div class="ig-area">歡迎追蹤ㄌㄌ，妳家小寶貝可能會上鏡頭喔！<br><img src="ig.png"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="page-wrapper" id="wrap-3">
+        <div class="side-control">
+            <button class="btn btn-save" onclick="savePage(3)">📸 儲存第三頁</button>
+            <p style="font-size:11px; color:#888;">(互動與驗收)</p>
+        </div>
+        <div class="a4-canvas" id="canvas-3">
+            <div class="header">
+                <h1>嘉義寵物保姆 ㄌㄌ ∥ 到府服務日誌</h1>
+                <div class="chapter-tag">Chapter 03. Interaction & Safety</div>
+            </div>
+            <div class="info-bar">
+                <span class="sync-pet">今日到誰家：阿仔</span>
+                <span class="sync-staff">保姆：ㄌㄌ</span>
+                <span id="date-3">日期：</span>
+            </div>
+            <div class="section">
+                <div class="section-title">📸 今日暖心互動</div>
+                <div class="photo-box ratio-43" style="width:100%; margin-bottom:15px;"><span>🌟 點擊上傳主打照片</span><img src=""><input type="file" data-id="p25" onchange="pv(this)"></div>
+                <div class="photo-grid">
+                    <div class="photo-box"><span>📷側拍1</span><img src=""><input type="file" data-id="p26" onchange="pv(this)"></div>
+                    <div class="photo-box"><span>📷側拍2</span><img src=""><input type="file" data-id="p27" onchange="pv(this)"></div>
+                    <div class="photo-box"><span>📷側拍3</span><img src=""><input type="file" data-id="p28" onchange="pv(this)"></div>
+                    <div class="photo-box"><span>📷側拍4</span><img src=""><input type="file" data-id="p29" onchange="pv(this)"></div>
+                    <div class="photo-box"><span>📷側拍5</span><img src=""><input type="file" data-id="p30" onchange="pv(this)"></div>
+                    <div class="photo-box"><span>📷側拍6</span><img src=""><input type="file" data-id="p31" onchange="pv(this)"></div>
+                </div>
+                <textarea rows="3" id="i-b" placeholder="描述今日精彩時刻..." oninput="as()"></textarea>
+            </div>
+            <div class="section" style="background:#FFF9F5;">
+                <div class="section-title">💌 ㄌㄌ 的專業悄悄話</div>
+                <textarea rows="4" id="i-t" style="border-bottom: 2px solid var(--gold);" placeholder="寫下溫馨提醒或照護建議..." oninput="as()"></textarea>
+                <img src="cat_tortie.png" class="cat-deco" style="width:120px;">
+            </div>
+            <div class="section">
+                <div class="section-title">🛡️ 全景安全衛生確認</div>
+                <div class="photo-grid" style="grid-template-columns: 1fr 1fr;">
+                    <div class="photo-box ratio-43"><span>驗收📷1</span><img src=""><input type="file" data-id="p32" onchange="pv(this)"></div>
+                    <div class="photo-box ratio-43"><span>驗收📷2</span><img src=""><input type="file" data-id="p33" onchange="pv(this)"></div>
+                    <div class="photo-box ratio-43"><span>驗收📷3</span><img src=""><input type="file" data-id="p34" onchange="pv(this)"></div>
+                    <div class="photo-box ratio-43"><span>驗收📷4</span><img src=""><input type="file" data-id="p35" onchange="pv(this)"></div>
+                </div>
+                <div class="tag-area" style="margin: 15px 0;">
+                    <div class="tag-btn" onclick="tg(this)">✅清潔完成</div><div class="tag-btn" onclick="tg(this)">✅零食玩具歸位</div><div class="tag-btn" onclick="tg(this)">✅電器安全巡查</div><div class="tag-btn" onclick="tg(this)">✅門窗鎖閉確認</div>
+                </div>
+                <textarea rows="2" id="i-sa" placeholder="環境細節補充說明..." oninput="as()"></textarea>
+            </div>
+            <div class="footer">
+                <div class="slogan">「生活雖然匆忙，但我會一直在這，陪孩子享受愜意的日常。」</div>
+                <div class="ig-area">歡迎追蹤ㄌㄌ，妳家小寶貝可能會上鏡頭喔！<br><img src="ig.png"></div>
+            </div>
+        </div>
+    </div>
+
     <button class="btn btn-reset" onclick="rs()">↺ 下一戶：徹底抹除暫存</button>
-</div>
-
-<div id="result-container">
-    <button id="dl-btn" class="btn btn-download" onclick="dl()">📥 儲存中文命名 JPG 檔案</button>
-    <p style="color:var(--primary); font-size: 13px; margin: 15px 0;">(若按鈕無反應，請改用長按圖片儲存)</p>
-    <img id="final-img" src="">
-    <button class="btn btn-reset" onclick="hideResult()">✎ 返回修改</button>
-</div>
 
 <script>
-    const dbName = "LiliPetVault";
-    let db, currentBlobUrl = null;
-    const request = indexedDB.open(dbName, 1);
-    request.onupgradeneeded = e => e.target.result.createObjectStore("photos");
-    request.onsuccess = e => { db = e.target.result; loadAll(); };
+    const dbName = "LiliPetWysiwyg_V6";
+    let db;
+    const req = indexedDB.open(dbName, 1);
+    req.onupgradeneeded = e => e.target.result.createObjectStore("photos");
+    req.onsuccess = e => { db = e.target.result; loadAll(); };
 
-    function savePhotoDB(id, base64) {
-        const tx = db.transaction("photos", "readwrite");
-        tx.objectStore("photos").put(base64, id);
-    }
-
+    function savePhotoDB(id, b64) { db.transaction("photos", "readwrite").objectStore("photos").put(b64, id); }
+    
     function loadAll() {
         const fields = ['i-h', 'i-f', 'i-w', 'i-p', 'i-m', 'i-b', 'i-t', 'i-sa', 'i-s'];
-        fields.forEach(id => { const val = localStorage.getItem(id); if (val) document.getElementById(id).value = val; });
+        fields.forEach(id => { const v = localStorage.getItem(id); if (v) document.getElementById(id).value = v; });
         const tags = JSON.parse(localStorage.getItem('tags') || '[]');
-        document.querySelectorAll('.tag-btn').forEach(btn => { if (tags.includes(btn.innerText)) btn.classList.add('active'); });
-        const tx = db.transaction("photos", "readonly");
-        const store = tx.objectStore("photos");
-        document.querySelectorAll('input[type="file"]').forEach(input => {
-            const pid = input.getAttribute('data-id');
-            if(pid) {
-                store.get(pid).onsuccess = e => {
-                    if (e.target.result) {
-                        const img = input.parentElement.querySelector('img');
-                        const span = input.parentElement.querySelector('span');
-                        img.src = e.target.result; img.style.display = 'block'; span.style.display = 'none';
-                    }
-                };
-            }
+        document.querySelectorAll('.tag-btn').forEach(b => { if (tags.includes(b.innerText)) b.classList.add('active'); });
+        syncAll();
+
+        const store = db.transaction("photos", "readonly").objectStore("photos");
+        document.querySelectorAll('input[type="file"]').forEach(i => {
+            const pid = i.getAttribute('data-id');
+            store.get(pid).onsuccess = e => { if (e.target.result) i.parentElement.querySelector('img').src = e.target.result; };
         });
     }
 
-    function as() {
-        const fields = ['i-h', 'i-f', 'i-w', 'i-p', 'i-m', 'i-b', 'i-t', 'i-sa', 'i-s'];
-        fields.forEach(id => localStorage.setItem(id, document.getElementById(id).value));
-    }
-
-    function tg(btn) {
-        btn.classList.toggle('active');
-        localStorage.setItem('tags', JSON.stringify(Array.from(document.querySelectorAll('.tag-btn.active')).map(b => b.innerText)));
-    }
-
-    function rs() {
-        if (confirm('確定要抹除目前所有「照片與文字暫存」嗎？')) {
-            localStorage.clear();
-            const tx = db.transaction("photos", "readwrite");
-            tx.objectStore("photos").clear().onsuccess = () => location.reload();
-        }
-    }
-
-    window.addEventListener('beforeunload', e => {
-        if (document.getElementById('i-h').value || document.getElementById('i-f').value) {
-            e.preventDefault(); e.returnValue = '';
-        }
-    });
-
-    function pv(input) {
-        const box = input.parentElement;
-        const img = box.querySelector('img');
-        const span = box.querySelector('span');
-        const pid = input.getAttribute('data-id');
-        if (input.files[0]) {
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                const base64 = e.target.result;
-                img.src = base64; img.style.display = 'block'; span.style.display = 'none';
-                if(pid) savePhotoDB(pid, base64);
-            };
-            reader.readAsDataURL(input.files[0]);
-        }
-    }
-
-    function dl() {
-        if (!currentBlobUrl) return;
-        const petName = document.getElementById('i-h').value.trim() || "未命名毛孩";
+    function as() { const fields = ['i-h', 'i-f', 'i-w', 'i-p', 'i-m', 'i-b', 'i-t', 'i-sa', 'i-s']; fields.forEach(id => localStorage.setItem(id, document.getElementById(id).value)); }
+    function tg(b) { b.classList.toggle('active'); localStorage.setItem('tags', JSON.stringify(Array.from(document.querySelectorAll('.tag-btn.active')).map(x => x.innerText))); }
+    
+    function syncAll() {
+        const name = document.getElementById('i-h').value || " ";
+        const staff = document.getElementById('i-s').value;
         const now = new Date();
-        const dateStr = `${now.getMonth()+1}月${now.getDate()}日`;
-        const fileName = `[ㄌㄌ照護]_${petName}_${dateStr}.jpg`;
-
-        const a = document.createElement('a');
-        a.href = currentBlobUrl;
-        a.download = fileName;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
+        const timeStr = `日期：${now.getFullYear()}/${now.getMonth()+1}/${now.getDate()} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+        
+        document.querySelectorAll('.sync-pet').forEach(el => el.innerText = `今日到誰家：${name}`);
+        document.querySelectorAll('.sync-staff').forEach(el => el.innerText = `保姆：${staff}`);
+        document.querySelectorAll('[id^="date-"]').forEach(el => el.innerText = timeStr);
+        as();
     }
 
-    async function generateReport() {
-        const btn = document.getElementById('gen-btn');
-        btn.innerText = '⚡ CSI 影像瘦身壓製中...';
-        const now = new Date();
-        document.getElementById('v-t').innerText = `報告日期：${now.toLocaleDateString()} ${now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`;
-        document.getElementById('r-s').innerText = document.getElementById('i-s').value;
-        const renderTagsArea = document.getElementById('r-sa-tags');
-        renderTagsArea.innerHTML = '';
-        document.querySelectorAll('.tag-btn.active').forEach(tag => {
-            const span = document.createElement('span'); span.className = 'active-tag-render'; span.innerText = tag.innerText; renderTagsArea.appendChild(span);
-        });
-        document.querySelectorAll('textarea').forEach(ta => {
-            const rid = ta.id.replace('i-', 'r-'); const render = document.getElementById(rid); if(render) render.innerText = ta.value;
-        });
-        document.body.classList.add('preview-mode');
+    function pv(i) {
+        const pid = i.getAttribute('data-id');
+        if (i.files[0]) {
+            const r = new FileReader();
+            r.onload = e => { i.parentElement.querySelector('img').src = e.target.result; savePhotoDB(pid, e.target.result); };
+            r.readAsDataURL(i.files[0]);
+        }
+    }
+
+    function rs() { if (confirm('確定抹除本戶所有資料？')) { localStorage.clear(); db.transaction("photos", "readwrite").objectStore("photos").clear().onsuccess = () => location.reload(); } }
+
+    async function savePage(num) {
+        const target = document.getElementById(`canvas-${num}`);
+        const petName = document.getElementById('i-h').value || "未命名";
+        const pageTitle = ["飲食補水", "生理醫囑", "互動驗收"][num-1];
+        
+        // 渲染模式：隱藏不必要的 UI
+        document.body.classList.add('rendering');
+        target.classList.add('rendering-target');
+        
+        // 強制捲動到該頁確保渲染完整
+        target.scrollIntoView();
+
         setTimeout(() => {
-            const area = document.querySelector("#report-export-area");
-            html2canvas(area, { 
+            html2canvas(target, { 
                 useCORS: true, 
-                scale: 2.5, /* 2.5 倍維持高畫質縮放 */
-                backgroundColor: "#F4F0F7", 
-                width: 1000, 
-                windowWidth: 1000, 
-                height: area.scrollHeight
+                scale: 2.0, /* 降至 2.0 倍提升極致穩定度 */
+                backgroundColor: "#FFFDF9",
+                logging: false
             }).then(canvas => {
-                // 轉為 JPG，品質 0.8
-                canvas.toBlob((blob) => {
-                    if (currentBlobUrl) URL.revokeObjectURL(currentBlobUrl);
-                    currentBlobUrl = URL.createObjectURL(blob);
-                    document.getElementById('final-img').src = currentBlobUrl;
-                    document.getElementById('result-container').style.display = 'block';
-                    document.body.classList.remove('preview-mode');
-                    btn.innerText = '🚀 生成高清報告 (V4.1 瘦身不失真版)';
-                    document.getElementById('result-container').scrollIntoView({ behavior: 'smooth' });
-                }, 'image/jpeg', 0.8);
+                canvas.toBlob(blob => {
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `[ㄌㄌ照護]_${petName}_0${num}${pageTitle}.jpg`;
+                    a.click();
+                    
+                    document.body.classList.remove('rendering');
+                    alert(`✅ 第 0${num} 頁已成功壓製並啟動下載！`);
+                }, 'image/jpeg', 0.85);
             });
-        }, 1200);
+        }, 500);
     }
-    function hideResult() { document.getElementById('result-container').style.display = 'none'; window.scrollTo({ top: 0, behavior: 'smooth' }); }
 </script>
 </body>
 </html>
