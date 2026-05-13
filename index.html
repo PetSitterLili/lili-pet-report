@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <link rel="manifest" href="manifest.json">
     <link rel="apple-touch-icon" href="denicon.png">
-    <title>ㄌㄌ 照護日誌 V7.2.1 Flagship PLUS</title>
+    <title>ㄌㄌ 照護日誌 V7.2.2 Flagship PLUS</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;700&family=Cormorant+Garamond:ital,wght@1,600&display=swap" rel="stylesheet">
     <style>
@@ -43,7 +43,6 @@
         .report-grid-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 20px; }
         .col-section { background: white; border-radius: 25px; padding: 25px; border: 1px solid rgba(109,91,142,0.06); position: relative; display: flex; flex-direction: column; }
         
-        /* 悄悄話區塊精確避讓調校 */
         .whisper-box { background: var(--milk-tea-gradient); border-radius: 20px; padding: 20px; margin-top: 20px; position: relative; }
         .whisper-box .text-content-final { padding-right: 115px !important; padding-bottom: 10px; font-weight:700; min-height: 120px; } 
         
@@ -55,9 +54,10 @@
         .photo-box-final { width: 100%; aspect-ratio: 3/4; border-radius: 15px; overflow: hidden; background: #F8F8F8; display: none; }
         .photo-box-final.ratio-43 { aspect-ratio: 4 / 3; }
         .photo-box-final img { width: 100%; height: 100%; object-fit: cover; }
-        .text-content-final { font-size: 18px; line-height: 1.8; color: #333; white-space: pre-wrap; padding-right: 30px; min-height: 40px; padding-bottom: 10px; }
         
-        /* 貓咪模型位置微調 */
+        /* 核心修復：為前兩頁的文字區塊加上貓咪避讓空間 */
+        .text-content-final { font-size: 18px; line-height: 1.8; color: #333; white-space: pre-wrap; min-height: 40px; padding-bottom: 90px; padding-right: 125px; }
+        
         .cat-deco { position: absolute; right: 5px; bottom: 5px; width: 130px; height: auto; z-index: 10; }
         
         .footer-final { margin-top: auto; padding-top: 30px; border-top: 1.5px solid var(--m-bg); display: flex; justify-content: space-between; align-items: flex-end; }
@@ -215,19 +215,18 @@
                     <div class="photo-grid-final" id="stg-p26"></div>
                     <div id="stg-p36-wrap" style="width:100%; margin-bottom:12px;"></div>
                     <div class="photo-grid-final" style="grid-template-columns: 1fr 1fr;" id="stg-p37"></div>
-                    <div class="text-content-final" id="stg-b"></div>
-                </div>
+                    <div class="text-content-final" id="stg-b" style="padding-right: 0;"></div> </div>
                 <div class="col-section">
                     <div class="report-title-final">🛡️ 安全衛生驗收</div>
                     <div id="stg-p32-wrap"></div>
                     <div id="stg-tags" style="margin-top:10px;"></div>
-                    <div class="text-content-final" id="stg-sa" style="font-size:16px; border-top:1px dashed #DDD; padding-top:15px; color:var(--gold); margin-top:10px;"></div>
+                    <div class="text-content-final" id="stg-sa" style="font-size:16px; border-top:1px dashed #DDD; padding-top:15px; color:var(--gold); margin-top:10px; padding-right: 0;"></div>
                     
                     <div class="whisper-box">
-                        <div class="report-title-final">💌 想對毛爸媽說的悄悄話</div>
+                        <div class="report-title-final">💌 ㄌㄌ想對毛爸媽說的悄悄話</div>
                         <div class="text-content-final" id="stg-t"></div>
                     </div>
-                    <img src="cat_tortie.png" class="cat-deco" style="width:130px; right: 2px; bottom: 2px;">
+                    <img src="cat_tortie.png" class="cat-deco" style="width:130px; right: 5px; bottom: 5px;">
                 </div>
             </div>
             <div class="footer-final"><div class="slogan-final">「生活雖然匆忙，但我會一直在這，陪孩子享受愜意的日常。」</div><div class="ig-area-final">歡迎追蹤ㄌㄌ，因為你家小寶貝可能會上鏡頭喔！<br><img src="ig.png"></div></div>
